@@ -307,10 +307,13 @@
         }
 
         function previewTreeFile(projectName, filePath) {
-            const fullPath = `./${projectName}/${filePath}`;
+            const fullPath = `/../${projectName}/${filePath}`;
 
             fetch(fullPath)
-                .then(res => res.text())
+                .then(res => {
+                    if (!res.ok) throw new Error('No encontrado');
+                    return res.text();
+                })
                 .then(content => {
                     if (content.length > 100000) {
                         content = content.substring(0, 100000) + '\n\n... (archivo muy grande, contenido truncado)';
@@ -320,7 +323,7 @@
                     document.getElementById('fileModal').classList.add('active');
                 })
                 .catch(err => {
-                    alert('No se pudo cargar: ' + filePath);
+                    alert('No se pudo cargar: ' + filePath + '\n\n' + err.message);
                 });
         }
 
