@@ -750,6 +750,7 @@
                 </div>
 
                 <div class="header-buttons">
+                    <button class="btn-secondary" onclick="rescanWorkspace()">Rescanear</button>
                     <button class="btn-primary" onclick="exportJSON()">Exportar JSON</button>
                     <button class="btn-secondary" onclick="exportCSV()">Exportar CSV</button>
                 </div>
@@ -1119,6 +1120,42 @@
                 closeSidebar();
             }
         });
+
+        async function rescanWorkspace() {
+            const originalText = document.querySelector('.header-buttons button:first-child').textContent;
+            const button = document.querySelector('.header-buttons button:first-child');
+
+            button.textContent = 'Escaneando...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch('/rescan');
+                const data = await response.json();
+
+                allProjects = data.projects;
+                document.getElementById('stat-projects').textContent = data.projectCount;
+                document.getElementById('stat-time').textContent = new Date(data.scannedAt).toLocaleDateString('es-ES');
+
+                const totalSize = calculateTotalSize(allProjects);
+                document.getElementById('stat-size').textContent = totalSize;
+
+                renderProjects(allProjects);
+                closeSidebar();
+
+                button.textContent = 'OK';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 2000);
+            } catch (error) {
+                console.error('Error rescaneando:', error);
+                button.textContent = 'Error';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
+        }
 
         loadWorkspaceData();
     </script>
