@@ -6,14 +6,14 @@ test('Parser - Spanish format detection', () => {
   const content = '[15/1/26, 14:32:45] Juan: Hola';
   const parser = new WhatsappParser(content);
   const format = parser.detectFormat();
-  assert.strictEqual(format, 'es-DD/M/YY');
+  assert.strictEqual(format, 'es-ES');
 });
 
 test('Parser - English format detection', () => {
   const content = '[1/15/26, 2:32:45 PM] John: Hello';
   const parser = new WhatsappParser(content);
   const format = parser.detectFormat();
-  assert.strictEqual(format, 'en-M/DD/YY');
+  assert.strictEqual(format, 'en-US');
 });
 
 test('Parser - Parse single valid message', () => {
@@ -89,9 +89,9 @@ test('Parser - Detect system messages correctly', () => {
     { text: 'Este es un mensaje normal', isSystem: false }
   ];
 
-  const parser = new WhatsappParser('');
+  const parser = new WhatsappParser('[15/1/26, 14:32:45] User: Test');
   testMessages.forEach(({ text, isSystem }) => {
-    const result = parser.isSystemMessage(`[15/1/26, 14:32:45] ${text}`);
+    const result = parser.isSystemMessage(text);
     assert.strictEqual(result, isSystem, `Failed for: ${text}`);
   });
 });
@@ -143,7 +143,7 @@ test('Parser - Get format info', () => {
   parser.getMessages();
 
   const info = parser.getFormatInfo();
-  assert.strictEqual(info.format, 'es-DD/M/YY');
+  assert.strictEqual(info.languageCode, 'es-ES');
   assert.strictEqual(info.messageCount, 2);
   assert.strictEqual(info.uniqueUsers, 2);
 });
