@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Chat Fragmenter</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <h1>📱 WhatsApp Chat Fragmenter</h1>
+        <p class="subtitle">Fragmenta chats grandes en trozos mensuales para NotebookLM</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Step 1: Upload -->
+      <section class="section" id="uploadSection">
+        <h2>📂 Paso 1: Sube tu Chat</h2>
+
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-content">
+            <p class="upload-icon">📄</p>
+            <p class="upload-text">Arrastra tu archivo aquí</p>
+            <p class="upload-subtext">o haz click para seleccionar</p>
+            <input
+              type="file"
+              id="fileInput"
+              class="file-input"
+              accept=".txt"
+              hidden
+            >
+          </div>
+        </div>
+
+        <div class="file-info" id="fileInfo" style="display: none;">
+          <div class="info-card">
+            <p><strong>Archivo:</strong> <span id="fileName"></span></p>
+            <p><strong>Tamaño:</strong> <span id="fileSize"></span></p>
+            <p><strong>Formato detectado:</strong> <span id="detectedFormat"></span></p>
+            <p><strong>Mensajes:</strong> <span id="messageCount"></span></p>
+            <p><strong>Usuarios únicos:</strong> <span id="uniqueUsers"></span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2: Options -->
+      <section class="section" id="optionsSection" style="display: none;">
+        <h2>⚙️ Paso 2: Configura las Opciones</h2>
+
+        <div class="options-card">
+          <div class="option">
+            <input
+              type="checkbox"
+              id="skipSystem"
+              checked
+              class="checkbox"
+            >
+            <label for="skipSystem">
+              <strong>Ignorar mensajes de sistema</strong>
+              <small>Usuario entró al grupo, cambió nombre, etc.</small>
+            </label>
+          </div>
+
+          <div class="option">
+            <input
+              type="checkbox"
+              id="skipMedia"
+              checked
+              class="checkbox"
+            >
+            <label for="skipMedia">
+              <strong>Ignorar multimedia</strong>
+              <small>[Imagen], [Video], [Audio], etc.</small>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Processing -->
+      <section class="section" id="processingSection" style="display: none;">
+        <h2>⚙️ Paso 3: Procesando...</h2>
+
+        <div class="progress-card">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p id="progressText">Detectando formato...</p>
+        </div>
+      </section>
+
+      <!-- Step 4: Results -->
+      <section class="section" id="resultsSection" style="display: none;">
+        <h2>✅ Paso 4: Fragmentos Generados</h2>
+
+        <div class="results-summary" id="resultsSummary"></div>
+
+        <div class="fragments-list" id="fragmentsList"></div>
+
+        <div class="actions-card">
+          <button class="btn btn-primary" id="downloadBtn">
+            ⬇️ Descargar Archivos
+          </button>
+          <button class="btn btn-secondary" id="resetBtn">
+            🔄 Procesar otro archivo
+          </button>
+        </div>
+      </section>
+
+      <!-- Error Section -->
+      <section class="section" id="errorSection" style="display: none;">
+        <div class="error-card">
+          <p class="error-icon">❌</p>
+          <p class="error-message" id="errorMessage"></p>
+          <button class="btn btn-secondary" id="errorRetryBtn">
+            Intentar de nuevo
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        <strong>WhatsApp Chat Fragmenter v1.0.0</strong> •
+        <a href="#" onclick="showHelp(); return false;">Ayuda</a> •
+        <a href="#" onclick="showAbout(); return false;">Acerca de</a>
+      </p>
+      <p class="privacy">✅ Procesamiento 100% local • Tus datos son privados</p>
+    </footer>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('helpModal')">&times;</button>
+      <h2>Ayuda</h2>
+      <h3>¿Cómo usar?</h3>
+      <ol>
+        <li>Exporta tu chat de WhatsApp como archivo .txt</li>
+        <li>Sube el archivo aquí</li>
+        <li>Configura las opciones (opcional)</li>
+        <li>Espera a que se procese</li>
+        <li>Descarga los fragmentos mensuales</li>
+      </ol>
+
+      <h3>¿Cómo exportar desde WhatsApp?</h3>
+      <p><strong>Android:</strong> Chat → Más opciones → Más → Exportar chat</p>
+      <p><strong>iPhone:</strong> Chat → Editar → Más opciones → Exportar chat</p>
+
+      <h3>¿Cómo usar en NotebookLM?</h3>
+      <ol>
+        <li>Abre <a href="https://notebooklm.google.com" target="_blank">NotebookLM</a></li>
+        <li>Crea un nuevo notebook</li>
+        <li>Para cada archivo:
+          <ul>
+            <li>Click en "Add Source"</li>
+            <li>Sube el archivo Markdown</li>
+          </ul>
+        </li>
+        <li>¡Listo! Puedes hacer preguntas sobre todo el chat</li>
+      </ol>
+
+      <h3>¿Qué se filtra?</h3>
+      <ul>
+        <li>Mensajes de sistema (si está activado)</li>
+        <li>Multimedia: [Imagen], [Video], [Audio], etc. (si está activado)</li>
+        <li>Mensajes eliminados</li>
+      </ul>
+
+      <h3>Limitaciones</h3>
+      <ul>
+        <li>Máximo 2GB por archivo</li>
+        <li>Solo formato .txt</li>
+        <li>Se procesan solo mensajes de texto</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Fragment Viewer Modal -->
+  <div class="modal" id="fragmentModal">
+    <div class="modal-content modal-large">
+      <button class="modal-close" onclick="closeModal('fragmentModal')">&times;</button>
+      <h2 id="fragmentTitle"></h2>
+      <div class="fragment-viewer" id="fragmentViewer">
+        <pre id="fragmentContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('aboutModal')">&times;</button>
+      <h2>Acerca de</h2>
+      <p><strong>WhatsApp Chat Fragmenter v1.0.0</strong></p>
+      <p>Herramienta para fragmentar archivos grandes de chat de WhatsApp en trozos mensuales.</p>
+
+      <h3>Características</h3>
+      <ul>
+        <li>✅ Detección automática de formato (ES, EN, PT, FR)</li>
+        <li>✅ Fragmentación por mes</li>
+        <li>✅ Filtrado de ruido</li>
+        <li>✅ Índice automático</li>
+        <li>✅ Procesamiento 100% local</li>
+      </ul>
+
+      <h3>Uso</h3>
+      <p>Herramienta web con Node.js y Express.js</p>
+
+      <h3>Privacidad</h3>
+      <p>
+        Todos los datos se procesan localmente en tu navegador y servidor.
+        No se envía nada a internet. Tus datos son completamente privados.
+      </p>
+
+      <h3>Contacto</h3>
+      <p>Para reportar bugs o sugerencias, contacta al equipo de desarrollo.</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
