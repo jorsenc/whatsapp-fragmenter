@@ -39,8 +39,10 @@
         h1 {
             font-size: 1.6rem;
             margin-bottom: 0.8rem;
-            color: var(--primary);
+            color: #ffffff;
             width: 100%;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .header-columns {
@@ -86,10 +88,15 @@
             gap: 0.5rem;
         }
 
+        .stat {
+            color: #b0b0b0;
+        }
+
         .stat-value {
-            color: var(--primary);
-            font-weight: bold;
+            color: #ffffff;
+            font-weight: 600;
             font-size: 1rem;
+            margin-left: 0.5rem;
         }
 
         .controls {
@@ -352,9 +359,10 @@
         .panel h2 {
             font-size: 1.2rem;
             margin-bottom: 1rem;
-            color: var(--primary);
+            color: #f5f5f5;
             border-bottom: 2px solid var(--border);
             padding-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .projects-list {
@@ -420,38 +428,41 @@
         }
 
         .project-name {
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1rem;
-            color: var(--primary);
+            color: #ffffff;
             margin-bottom: 0.3rem;
+            letter-spacing: 0.3px;
         }
 
         .project-type {
             font-size: 0.85rem;
-            color: var(--accent);
+            color: #d0d0d0;
             background: rgba(255, 255, 255, 0.08);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
             display: inline-block;
             margin-bottom: 0.3rem;
+            font-weight: 500;
         }
 
         .project-intelligent {
             font-size: 0.85rem;
-            color: var(--primary);
+            color: #e8e8e8;
             background: rgba(255, 255, 255, 0.15);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
             display: inline-block;
             margin-bottom: 0.3rem;
             margin-left: 0.5rem;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .project-desc {
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: #a0a0a0;
             margin-top: 0.3rem;
+            font-weight: 400;
         }
 
         .no-project {
@@ -489,16 +500,18 @@
         }
 
         .detail-label {
-            font-weight: bold;
-            color: var(--accent3);
+            font-weight: 600;
+            color: #909090;
             font-size: 0.85rem;
             text-transform: uppercase;
             margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
         }
 
         .detail-value {
-            color: var(--text);
+            color: #e0e0e0;
             font-size: 0.95rem;
+            font-weight: 400;
         }
 
         .tag {
