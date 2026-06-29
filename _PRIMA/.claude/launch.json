@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "whatsapp-fragmenter",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "whatsapp-fragmenter", "run", "web"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

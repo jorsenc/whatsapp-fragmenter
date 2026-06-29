@@ -212,6 +212,11 @@ async function processFile() {
     displayResults(data);
     showSection('resultsSection');
 
+    // Auto-download ZIP after a short delay
+    setTimeout(() => {
+      downloadZip();
+    }, 1000);
+
   } catch (error) {
     showError(`Error al procesar: ${error.message}`);
   }
@@ -225,6 +230,8 @@ function displayResults(data) {
   summary.innerHTML = `
     <p>✅ Procesamiento completado exitosamente</p>
     <p><strong>${data.fragmentCount}</strong> fragmentos generados de <strong>${data.totalMessages.toLocaleString()}</strong> mensajes</p>
+    <p>📁 Archivos guardados en: <code>${data.outputDir}</code></p>
+    <p>📦 ZIP generado: <code>${data.zipFile}</code></p>
   `;
 
   const fragmentsList = document.getElementById('fragmentsList');
@@ -248,6 +255,36 @@ function displayResults(data) {
 }
 
 /**
+ * Download ZIP with all fragments
+ */
+async function downloadZip() {
+  if (!currentUploadId) {
+    return;
+  }
+
+  try {
+    const url = `/api/download-zip/${currentUploadId}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Error al descargar ZIP');
+    }
+
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = `fragmentos_${new Date().getTime()}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error descargando ZIP:', error);
+  }
+}
+
+/**
  * Download fragments
  */
 async function downloadFragments() {
@@ -258,29 +295,21 @@ async function downloadFragments() {
 
   try {
     downloadBtn.disabled = true;
-    downloadBtn.textContent = '⬇️ Descargando...';
+    downloadBtn.textContent = '⬇️ Descargando ZIP...';
 
-    // Download index
-    await downloadFile('INDICE_FRAGMENTOS.md');
-
-    // Download each fragment
-    for (const file of currentFragments) {
-      await downloadFile(file.name);
-      // Small delay between downloads
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
+    await downloadZip();
 
     downloadBtn.disabled = false;
     downloadBtn.textContent = '✅ Descargado';
 
     setTimeout(() => {
-      downloadBtn.textContent = '⬇️ Descargar Archivos';
+      downloadBtn.textContent = '⬇️ Descargar ZIP';
     }, 2000);
 
   } catch (error) {
     showError(`Error al descargar: ${error.message}`);
     downloadBtn.disabled = false;
-    downloadBtn.textContent = '⬇️ Descargar Archivos';
+    downloadBtn.textContent = '⬇️ Descargar ZIP';
   }
 }
 
