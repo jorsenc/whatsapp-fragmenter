@@ -67,8 +67,13 @@ class WhatsappParser {
     const regex = this.getRegex();
     let currentMessage = null;
 
-    for (const line of this.lines) {
+    for (let line of this.lines) {
       if (!line.trim()) continue;
+
+      // Remove invisible characters (ZERO-WIDTH SPACE, etc)
+      line = line.replace(/[​‌‍ ⁠]/g, '').trim();
+
+      if (!line) continue;
 
       const match = line.match(regex);
 

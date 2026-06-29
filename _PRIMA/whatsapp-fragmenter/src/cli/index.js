@@ -35,14 +35,9 @@ function parseArgs(args) {
       process.exit(0);
     }
 
-    if (arg === '--version' || arg === '-v') {
-      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
-        // This is --verbose not --version (special handling)
-        options.verbose = true;
-      } else {
-        console.log(`WhatsApp Fragmenter v${VERSION}`);
-        process.exit(0);
-      }
+    if (arg === '--version') {
+      console.log(`WhatsApp Fragmenter v${VERSION}`);
+      process.exit(0);
     }
 
     if (arg === '-o' || arg === '--output') {
