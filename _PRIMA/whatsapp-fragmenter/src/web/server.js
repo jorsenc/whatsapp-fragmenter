@@ -231,16 +231,21 @@ app.post('/api/process', async (req, res) => {
  */
 async function createZipFile(sourceDir, destPath) {
   return new Promise((resolve, reject) => {
-    const output = fsSync.createWriteStream(destPath);
-    const archive = archiver('zip', { zlib: { level: 9 } });
+    try {
+      const output = fsSync.createWriteStream(destPath);
+      // Create archive instance
+      const archive = archiver.create('zip', { zlib: { level: 9 } });
 
-    output.on('close', resolve);
-    archive.on('error', reject);
-    output.on('error', reject);
+      output.on('close', resolve);
+      archive.on('error', reject);
+      output.on('error', reject);
 
-    archive.pipe(output);
-    archive.directory(sourceDir, false);
-    archive.finalize();
+      archive.pipe(output);
+      archive.directory(sourceDir, false);
+      archive.finalize();
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
