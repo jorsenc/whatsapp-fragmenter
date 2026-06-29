@@ -24,7 +24,12 @@ export const LANGUAGE_PATTERNS = {
       /agregó a/i,
       /eliminó a/i,
       /dejó el grupo/i,
-      /fue agregado/i
+      /fue agregado/i,
+      /bloqueaste a/i,
+      /desbloqueaste a/i,
+      /los mensajes y las llamadas están cifrados/i,
+      /mensajes cifrados/i,
+      /solo las personas en este chat/i
     ]
   },
 
@@ -159,7 +164,14 @@ export const MEDIA_PATTERNS = [
   /^\[Adesivo\]$/i,
   /^\[Autocollant\]$/i,
   /^\[<Media omitted>\]$/i,
-  /^<Media omitted>$/i
+  /^<Media omitted>$/i,
+  /imagen omitida/i,
+  /video omitido/i,
+  /audio omitido/i,
+  /documento omitido/i,
+  /archivo omitido/i,
+  /fotos omitidas/i,
+  /videos omitidos/i
 ];
 
 /**
