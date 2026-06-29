@@ -307,7 +307,7 @@
         }
 
         function previewTreeFile(projectName, filePath) {
-            const fullPath = `/../${projectName}/${filePath}`;
+            const fullPath = `/workspace-files/${projectName}/${filePath}`;
 
             fetch(fullPath)
                 .then(res => {

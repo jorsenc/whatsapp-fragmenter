@@ -26,6 +26,40 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // Ruta para servir archivos del workspace
+    if (req.url.startsWith('/workspace-files/')) {
+        const relativePath = req.url.substring('/workspace-files/'.length);
+        const filePath = path.join(WORKSPACE_ROOT, decodeURIComponent(relativePath));
+
+        // Validar que el path está dentro del workspace
+        if (!filePath.startsWith(WORKSPACE_ROOT)) {
+            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            res.end('Acceso denegado');
+            return;
+        }
+
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('Archivo no encontrado');
+                return;
+            }
+
+            let contentType = 'text/plain';
+            if (filePath.endsWith('.json')) contentType = 'application/json';
+            if (filePath.endsWith('.js')) contentType = 'application/javascript';
+            if (filePath.endsWith('.html')) contentType = 'text/html';
+            if (filePath.endsWith('.css')) contentType = 'text/css';
+            if (filePath.endsWith('.md')) contentType = 'text/markdown';
+            if (filePath.endsWith('.xml')) contentType = 'application/xml';
+            if (filePath.endsWith('.yaml') || filePath.endsWith('.yml')) contentType = 'text/yaml';
+
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(data);
+        });
+        return;
+    }
+
     const filePath = path.join(APP_ROOT, req.url === '/' ? 'index.html' : req.url);
 
     fs.readFile(filePath, (err, data) => {
