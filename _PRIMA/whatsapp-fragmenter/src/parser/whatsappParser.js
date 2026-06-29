@@ -71,7 +71,16 @@ class WhatsappParser {
       if (!line.trim()) continue;
 
       // Remove invisible characters (ZERO-WIDTH SPACE, etc)
-      line = line.replace(/[​‌‍ ⁠]/g, '').trim();
+      // Remove invisible Unicode characters
+      line = line
+        .replace(/​/g, '') // ZERO WIDTH SPACE
+        .replace(/‌/g, '') // ZERO WIDTH NON-JOINER
+        .replace(/‍/g, '') // ZERO WIDTH JOINER
+        .replace(/‎/g, '') // LEFT-TO-RIGHT MARK
+        .replace(/‏/g, '') // RIGHT-TO-LEFT MARK
+        .replace(/؜/g, '') // ARABIC LETTER MARK
+        .replace(/﻿/g, '')  // ZERO WIDTH NO-BREAK SPACE
+        .trim();
 
       if (!line) continue;
 
