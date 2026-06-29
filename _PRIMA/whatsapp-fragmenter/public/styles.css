@@ -504,6 +504,54 @@ html, body {
   text-decoration: underline;
 }
 
+/* Fragment Viewer Modal */
+.modal-large {
+  max-width: 90%;
+  max-height: 90vh;
+  width: 90%;
+  height: 90vh;
+}
+
+.fragment-viewer {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(90vh - 150px);
+  font-family: 'Courier New', monospace;
+  font-size: 0.95em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.fragment-viewer pre {
+  margin: 0;
+  color: var(--text-light);
+}
+
+#fragmentTitle {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--primary);
+}
+
+/* Fragment Item Clickable */
+.fragment-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fragment-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.15);
+}
+
+.fragment-item:active {
+  transform: translateX(3px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {

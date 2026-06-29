@@ -4,6 +4,7 @@
 
 let currentUploadId = null;
 let currentFragments = [];
+let fragmentContents = {}; // Store fragment contents for viewing
 
 // DOM Elements
 const uploadArea = document.getElementById('uploadArea');
@@ -231,6 +232,9 @@ function displayResults(data) {
   const fragmentsList = document.getElementById('fragmentsList');
   fragmentsList.innerHTML = '';
 
+  // Clear previous contents
+  fragmentContents = {};
+
   data.files.forEach(file => {
     const item = document.createElement('div');
     item.className = 'fragment-item';
@@ -244,6 +248,15 @@ function displayResults(data) {
         <div class="fragment-stat">${file.size} KB</div>
       </div>
     `;
+
+    // Store content for viewing
+    fragmentContents[file.name] = file.content;
+
+    // Add click handler to open modal
+    item.addEventListener('click', () => {
+      openFragmentViewer(file.name, file.month);
+    });
+
     fragmentsList.appendChild(item);
   });
 }
@@ -338,6 +351,18 @@ function showHelp() {
  */
 function showAbout() {
   document.getElementById('aboutModal').classList.add('active');
+}
+
+/**
+ * Open fragment viewer modal
+ */
+function openFragmentViewer(filename, month) {
+  const content = fragmentContents[filename];
+  if (!content) return;
+
+  document.getElementById('fragmentTitle').textContent = `📄 ${filename} (${month})`;
+  document.getElementById('fragmentContent').textContent = content;
+  document.getElementById('fragmentModal').classList.add('active');
 }
 
 /**
