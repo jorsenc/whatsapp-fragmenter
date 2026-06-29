@@ -550,3 +550,73 @@
         }
 
         .file-btn.available {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(204, 204, 204, 0.1);
+        }
+
+        .file-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .tree-item {
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            user-select: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .tree-item:hover {
+            color: #e0e0e0;
+        }
+
+        .tree-toggle {
+            color: var(--accent2);
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tree-toggle:empty::before {
+            content: ' ';
+        }
+
+        .tree-name {
+            cursor: default;
+            flex: 1;
+        }
+
+        .tree-item.file .tree-name {
+            color: #b0b0b0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .tree-item.file:hover .tree-name {
+            color: #ffffff;
+        }
+
+        .tree-item.dir {
+            color: #d0d0d0;
+            font-weight: 500;
+        }
+
+        .tree-size {
+            color: #808080;
+            font-size: 0.8rem;
+        }
+
+        .tree-children {
+            margin-left: 1.5rem;
+            display: none;
+        }
+
+        .tree-children.open {
+            display: block;
+        }

@@ -217,7 +217,7 @@
                     <div class="detail-row">
                         <div class="detail-label">Estructura</div>
                         <div class="file-tree">
-                            ${renderFileTree(project.fileTree)}
+                            ${renderFileTree(project.fileTree, 0, project.name)}
                         </div>
                     </div>
                 `;
@@ -269,31 +269,59 @@
             `;
         }
 
-        function renderFileTree(tree, depth = 0) {
+        function renderFileTree(tree, depth = 0, projectName = '', path = '') {
             if (!tree || tree.length === 0) return '';
 
-            return tree.map(item => `
-                <div class="tree-item ${item.type}" onclick="toggleTree(event)">
-                    <span class="tree-toggle">&gt;</span>
-                    ${item.name}
-                    ${item.size ? ` (${formatBytes(item.size)})` : ''}
-                    ${item.children && item.children.length > 0 ? `
-                        <div class="tree-children">
-                            ${renderFileTree(item.children, depth + 1)}
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+            return tree.map(item => {
+                const itemPath = path ? path + '/' + item.name : item.name;
+                const isFile = item.type === 'file';
+                const isPreviewable = isFile && /\.(md|json|txt|js|ts|html|css|py|java|cpp|c|go|rb|php|sh|yml|yaml|xml)$/i.test(item.name);
+
+                return `
+                    <div class="tree-item ${item.type}" onclick="handleTreeClick(event, '${projectName}', '${itemPath}', ${isPreviewable})">
+                        ${item.children && item.children.length > 0 ? `<span class="tree-toggle">&gt;</span>` : '<span class="tree-toggle"></span>'}
+                        <span class="tree-name" style="${isPreviewable ? 'cursor: pointer; text-decoration: underline;' : ''}">${item.name}</span>
+                        ${item.size ? ` <span class="tree-size">(${formatBytes(item.size)})</span>` : ''}
+                        ${item.children && item.children.length > 0 ? `
+                            <div class="tree-children">
+                                ${renderFileTree(item.children, depth + 1, projectName, itemPath)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
         }
 
-        function toggleTree(event) {
-            if (event.target.classList.contains('tree-toggle')) {
-                const children = event.currentTarget.querySelector('.tree-children');
+        function handleTreeClick(event, projectName, filePath, isPreviewable) {
+            const toggle = event.currentTarget.querySelector('.tree-toggle');
+            const children = event.currentTarget.querySelector('.tree-children');
+
+            if (toggle && toggle.textContent) {
                 if (children) {
                     children.classList.toggle('open');
-                    event.target.textContent = children.classList.contains('open') ? 'V' : '>';
+                    toggle.textContent = children.classList.contains('open') ? 'V' : '>';
                 }
+            } else if (isPreviewable && event.target.classList.contains('tree-name')) {
+                previewTreeFile(projectName, filePath);
             }
+        }
+
+        function previewTreeFile(projectName, filePath) {
+            const fullPath = `./${projectName}/${filePath}`;
+
+            fetch(fullPath)
+                .then(res => res.text())
+                .then(content => {
+                    if (content.length > 100000) {
+                        content = content.substring(0, 100000) + '\n\n... (archivo muy grande, contenido truncado)';
+                    }
+                    document.getElementById('modalTitle').textContent = `${projectName} / ${filePath}`;
+                    document.getElementById('modalContent').textContent = content;
+                    document.getElementById('fileModal').classList.add('active');
+                })
+                .catch(err => {
+                    alert('No se pudo cargar: ' + filePath);
+                });
         }
 
         function formatBytes(bytes) {
