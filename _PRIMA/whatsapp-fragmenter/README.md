@@ -148,10 +148,10 @@ Opciones:
 
 ## 📚 Documentación
 
-- **Especificación completa:** `../. specify/feat-whatsapp-fragmenter.md`
-- **Task Breakdown:** `../.specify/feat-whatsapp-fragmenter-tasks.md`
-- **API Docs:** (Próximamente)
-- **Developer Guide:** (Próximamente)
+- **Especificación completa:** [SPECIFICATION](./.specify/feat-whatsapp-fragmenter.md)
+- **Task Breakdown:** [TASKS](./.specify/feat-whatsapp-fragmenter-tasks.md)
+- **Complete Guide:** [DOCUMENTATION.md](./DOCUMENTATION.md)
+- **API Reference:** Ver DOCUMENTATION.md sección "API Reference"
 
 ## 🔧 Estructura del Proyecto
 
