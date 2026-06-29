@@ -8,11 +8,14 @@ import path from 'path';
 import fs from 'fs/promises';
 import fsSync from 'fs';
 import { fileURLToPath } from 'url';
-import archiver from 'archiver';
+import { createRequire } from 'module';
 import WhatsappParser from '../parser/whatsappParser.js';
 import MonthFragmenter from '../fragmenter/monthFragmenter.js';
 import MarkdownGenerator from '../generators/markdownGenerator.js';
 import IndexGenerator from '../generators/indexGenerator.js';
+
+const require = createRequire(import.meta.url);
+const archiver = require('archiver');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
