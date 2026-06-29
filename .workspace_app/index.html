@@ -278,9 +278,9 @@
                 const isPreviewable = isFile && /\.(md|json|txt|js|ts|html|css|py|java|cpp|c|go|rb|php|sh|yml|yaml|xml)$/i.test(item.name);
 
                 return `
-                    <div class="tree-item ${item.type}" onclick="handleTreeClick(event, '${projectName}', '${itemPath}', ${isPreviewable})">
-                        ${item.children && item.children.length > 0 ? `<span class="tree-toggle">&gt;</span>` : '<span class="tree-toggle"></span>'}
-                        <span class="tree-name" style="${isPreviewable ? 'cursor: pointer; text-decoration: underline;' : ''}">${item.name}</span>
+                    <div class="tree-item ${item.type}">
+                        ${item.children && item.children.length > 0 ? `<span class="tree-toggle" onclick="handleTreeClick(event)">&gt;</span>` : '<span class="tree-toggle"></span>'}
+                        ${isPreviewable ? `<span class="tree-name" onclick="previewTreeFile('${projectName}', '${itemPath}')">${item.name}</span>` : `<span class="tree-name">${item.name}</span>`}
                         ${item.size ? ` <span class="tree-size">(${formatBytes(item.size)})</span>` : ''}
                         ${item.children && item.children.length > 0 ? `
                             <div class="tree-children">
@@ -292,24 +292,16 @@
             }).join('');
         }
 
-        function handleTreeClick(event, projectName, filePath, isPreviewable) {
+        function handleTreeClick(event) {
             event.stopPropagation();
 
-            // Si hace click en el toggle (expande/contrae)
-            if (event.target.classList.contains('tree-toggle')) {
-                const children = event.currentTarget.querySelector('.tree-children');
-                const toggle = event.target;
-                if (children) {
-                    children.classList.toggle('open');
-                    toggle.textContent = children.classList.contains('open') ? 'V' : '>';
-                }
-                return;
-            }
+            const toggle = event.target;
+            const treeItem = toggle.closest('.tree-item');
+            const children = treeItem.querySelector('.tree-children');
 
-            // Si hace click en el nombre del archivo (previsualiza)
-            if (isPreviewable && event.target.classList.contains('tree-name')) {
-                previewTreeFile(projectName, filePath);
-                return;
+            if (children) {
+                children.classList.toggle('open');
+                toggle.textContent = children.classList.contains('open') ? 'V' : '>';
             }
         }
 
