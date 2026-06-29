@@ -1,0 +1,51 @@
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const PORT = 8080;
+const APP_ROOT = __dirname;
+const WORKSPACE_ROOT = path.dirname(__dirname);
+
+const server = http.createServer((req, res) => {
+    // Ruta para rescanear el workspace
+    if (req.url === '/rescan') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+
+        try {
+            execSync('node .app/scan-workspace.js', { cwd: WORKSPACE_ROOT });
+
+            const jsonPath = path.join(APP_ROOT, 'workspace-data.json');
+            const data = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+
+            res.end(JSON.stringify(data));
+        } catch (error) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error al rescanear workspace' }));
+        }
+        return;
+    }
+
+    const filePath = path.join(APP_ROOT, req.url === '/' ? 'index.html' : req.url);
+
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 - Archivo no encontrado');
+            return;
+        }
+
+        let contentType = 'text/html';
+        if (filePath.endsWith('.json')) contentType = 'application/json';
+        if (filePath.endsWith('.js')) contentType = 'application/javascript';
+        if (filePath.endsWith('.css')) contentType = 'text/css';
+
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(data);
+    });
+});
+
+server.listen(PORT, () => {
+    console.log(`\n✅ Servidor corriendo en: http://localhost:${PORT}`);
+    console.log(`\nAbre tu navegador y ve a: http://localhost:${PORT}\n`);
+});

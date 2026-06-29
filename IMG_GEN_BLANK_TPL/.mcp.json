@@ -1,0 +1,15 @@
+{
+    "mcpServers":  {
+                       "image-gen-mcp":  {
+                                             "args":  [
+                                                          "-m",
+                                                          "image_gen_mcp"
+                                                      ],
+                                             "env":  {
+                                                         "IMAGE_OUTPUT_DIR":  "./generated_images"
+                                                     },
+                                             "command":  "python",
+                                             "cwd":  "."
+                                         }
+                   }
+}

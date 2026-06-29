@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: image-gen-mcp
+Version: 0.1.0
+Summary: Image Generation MCP Server using Pollinations.ai
+Requires-Python: >=3.8
+Requires-Dist: mcp>=0.1.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: python-dotenv>=1.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"

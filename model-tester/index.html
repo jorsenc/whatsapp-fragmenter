@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model Tester</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #fafafa; --card: #ffffff; --border: #e5e5e5;
+    --text: #1a1a1a; --muted: #6b6b6b; --accent: #2563eb; --accent-hover: #1d4ed8;
+    --radius-card: 8px; --radius-btn: 6px;
+    --shadow-modal: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 14px; line-height: 1.5; min-height: 100vh;
+  }
+  .app { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .header { display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .header-text h1 { font-size: 22px; font-weight: 600; margin-bottom: 2px; }
+  .header-text p { color: var(--muted); font-size: 13px; }
+  .counter { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn { padding: 8px 14px; border-radius: var(--radius-btn); border: 1px solid var(--border);
+    background: var(--card); color: var(--text); cursor: pointer; font-size: 13px;
+    font-weight: 500; font-family: inherit; transition: background 0.15s, border-color 0.15s; }
+  .btn:hover { background: #f5f5f5; }
+  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn:disabled:hover { background: var(--card); border-color: var(--border); }
+  .btn-primary:disabled:hover { background: var(--accent); border-color: var(--accent); }
+  .file-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card);
+    margin-bottom: 12px; font-size: 12px; }
+  .file-bar .file-name { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-bar .file-name.loaded { color: var(--text); font-weight: 500; }
+  .file-bar .file-name.unsaved::after { content: '\25CF'; color: #f59e0b; font-weight: 700; }
+  .file-bar .save-status { color: #16a34a; font-size: 11px; min-width: 60px; text-align: right; }
+  .icon-btn { width: 28px; height: 28px; border: none; background: transparent; cursor: pointer;
+    border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: background 0.15s; }
+  .icon-btn:hover { background: #f0f0f0; }
+  .filters { background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-card); padding: 14px 16px; margin-bottom: 16px;
+    display: flex; flex-direction: column; gap: 12px; }
+  .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-label { color: var(--muted); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+  .chip { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); cursor: pointer; font-size: 12px;
+    font-weight: 500; transition: all 0.15s; font-family: inherit; }
+  .chip:hover { border-color: #d0d0d0; }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .table-wrap { background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-card); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 600;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border); background: #fafafa; }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #fafafa; }
+  .model-name { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; }
+  .notes-cell { color: var(--muted); font-size: 13px; max-width: 280px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .actions { display: flex; gap: 4px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .badge-status-pending { background: #e5e5e5; color: #404040; }
+  .badge-status-tested { background: #dcfce7; color: #166534; }
+  .badge-status-failed { background: #fee2e2; color: #991b1b; }
+  .badge-tag { background: #eef2ff; color: #3730a3; margin: 2px 4px 2px 0; }
+  .badge-tag-custom { background: #fef3c7; color: #92400e; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 4px; }
+  .empty { padding: 48px 16px; text-align: center; color: var(--muted); }
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--card); border-radius: var(--radius-card);
+    box-shadow: var(--shadow-modal); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h2 { font-size: 16px; font-weight: 600; }
+  .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .modal-footer { padding: 14px 20px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 8px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.3px; }
+  .field input, .field textarea { padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: var(--radius-btn); font-family: inherit; font-size: 14px;
+    color: var(--text); background: var(--card); width: 100%; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .segmented { display: flex; border: 1px solid var(--border); border-radius: var(--radius-btn); overflow: hidden; }
+  .segmented button { flex: 1; padding: 8px; background: var(--card); border: none;
+    cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text);
+    font-family: inherit; border-right: 1px solid var(--border); }
+  .segmented button:last-child { border-right: none; }
+  .segmented button.active { background: var(--accent); color: white; }
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .checkbox-group label { display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; font-size: 12px; font-weight: 500; text-transform: none;
+    letter-spacing: 0; color: var(--text); }
+  .checkbox-group input { margin: 0; }
+  .tag-list-manager { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px;
+    background: #fafafa; border: 1px solid var(--border); border-radius: var(--radius-btn); min-height: 44px; }
+  .tag-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; }
+  .tag-chip button { background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 14px; line-height: 1; padding: 0; margin-left: 2px; }
+  .tag-chip button:hover { color: #991b1b; }
+  .tag-input-row { display: flex; gap: 8px; }
+  .tag-input-row input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; }
+  @media (max-width: 720px) {
+    .app { padding: 12px; }
+    .header { gap: 8px; }
+    .header-text h1 { font-size: 18px; }
+    .filters { padding: 10px; }
+    thead th, tbody td { padding: 8px; }
+    .notes-cell { max-width: 160px; }
+    .modal-body { padding: 14px; }
+    .table-wrap { overflow-x: auto; }
+    table { min-width: 600px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="header-text">
+      <h1>Model Tester</h1>
+      <p>Lightweight registry for LLM testing</p>
+      <div class="counter" id="counter">0 models</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="manageTagsBtn">Manage tags</button>
+      <button class="btn" id="manageProvidersBtn">Manage providers</button>
+      <button class="btn btn-primary" id="addBtn">+ Add model</button>
+    </div>
+  </header>
+
+  <div class="file-bar">
+    <button class="btn" id="newFileBtn" title="Create a new file">New file</button>
+    <button class="btn" id="openFileBtn" title="Open an existing file">Open</button>
+    <button class="btn" id="saveFileBtn" title="Save (auto-saves on every change when a file is open)" disabled>Save</button>
+    <span class="file-name" id="fileName">No file open</span>
+    <span class="save-status" id="saveStatus"></span>
+  </div>
+
+  <section class="filters">
+    <div class="filter-group">
+      <span class="filter-label">Status</span>
+      <div id="statusFilters"></div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Tags</span>
+      <div id="tagFilters"></div>
+    </div>
+  </section>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Service/Backend</th>
+          <th>Model</th>
+          <th>Status</th>
+          <th>Tags</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-backdrop" id="modelModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add model</h2>
+      <button class="icon-btn" id="closeModelModal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="backendSelect">Backend / Service</label>
+        <select id="backendSelect"></select>
+      </div>
+      <div class="field" id="customBackendField" style="display:none;">
+        <label for="backendCustomInput">Custom backend name</label>
+        <input type="text" id="backendCustomInput" placeholder="e.g. vLLM, LiteLLM, custom gateway">
+      </div>
+      <div class="field">
+        <label for="nameInput">Model name</label>
+        <input type="text" id="nameInput" placeholder="e.g. minimax-m3:cloud">
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <div class="segmented" id="statusSegmented">
+          <button type="button" data-status="pending" class="active">Pending</button>
+          <button type="button" data-status="tested">Tested</button>
+          <button type="button" data-status="failed">Failed</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="notesInput">Notes</label>
+        <textarea id="notesInput" placeholder="Optional notes..."></textarea>
+      </div>
+      <div class="field">
+        <label>Tags</label>
+        <div class="checkbox-group" id="tagCheckboxes"></div>
+      </div>
+      <div class="field">
+        <label for="newTagInput">New tag (adds to catalog on save)</label>
+        <input type="text" id="newTagInput" placeholder="Type a tag and Save">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="cancelModel">Cancel</button>
+      <button class="btn btn-primary" id="saveModel">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Provider Manager Modal -->
+<div class="modal-backdrop" id="providerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Manage providers</h2>
+      <button class="icon-btn" id="closeProviderModal" aria-label="Close">\u2715</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Catalog</label>
+        <div class="tag-list-manager" id="providerManagerList"></div>
+      </div>
+      <div class="field">
+        <label for="newProviderNameInput">Provider name</label>
+        <input type="text" id="newProviderNameInput" placeholder="e.g. vLLM, LiteLLM, Custom Gateway">
+      </div>
+      <div class="field">
+        <label>Engine</label>
+        <div class="segmented" id="newProviderEngineSegmented">
+          <button type="button" data-engine="openai" class="active">openai</button>
+          <button type="button" data-engine="anthropic">anthropic</button>
+          <button type="button" data-engine="ollama">ollama</button>
+        </div>
+      </div>
+      <div class="field">
+        <button class="btn btn-primary" id="addProviderBtn">Add provider</button>
+      </div>
+      <p class="hint">Providers not in the catalog are marked "(custom)" on rows. Removing a provider from the catalog does not strip it from existing rows.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="doneProviders">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tag Manager Modal -->
+<div class="modal-backdrop" id="tagModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Manage tags</h2>
+      <button class="icon-btn" id="closeTagModal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Catalog</label>
+        <div class="tag-list-manager" id="tagManagerList"></div>
+      </div>
+      <div class="field">
+        <label for="newTagManagerInput">Add new tag</label>
+        <div class="tag-input-row">
+          <input type="text" id="newTagManagerInput" placeholder="New tag name">
+          <button class="btn btn-primary" id="addTagBtn">Add</button>
+        </div>
+      </div>
+      <p class="hint">Removing a tag from the catalog does not strip it from existing rows. Tags not in the catalog are marked "(custom)".</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="doneTags">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_MODELS = 'modelTester.models';
+  const STORAGE_TAGS = 'modelTester.tagCatalog';
+  const STORAGE_BACKENDS = 'modelTester.backendCatalog';
+  const DEFAULT_TAGS = ['Reasoning','Code','Tool-Use','Long-Context','Math','Multilingual','Other'];
+  // Default backend providers detected in goose 1.38.0 build. Each entry:
+  //   { name: display name, engine: 'openai' | 'anthropic' | 'ollama' }
+  const DEFAULT_BACKENDS = [
+    { name: 'Ollama',           engine: 'ollama' },
+    { name: 'OpenAI',           engine: 'openai' },
+    { name: 'Anthropic',        engine: 'anthropic' },
+    { name: 'Azure OpenAI',     engine: 'openai' },
+    { name: 'OpenRouter',       engine: 'openai' },
+    { name: 'Databricks',       engine: 'openai' },
+    { name: 'GCP Vertex AI',    engine: 'openai' },
+    { name: 'Google Gemini',    engine: 'openai' },
+    { name: 'Cursor (Agent)',   engine: 'openai' },
+    { name: 'Hugging Face',     engine: 'openai' },
+    { name: 'xAI (Grok)',       engine: 'openai' },
+    { name: 'Snowflake Cortex', engine: 'openai' },
+    { name: 'Tetrate',          engine: 'openai' },
+    { name: 'GitHub Copilot',   engine: 'openai' }
+  ];
+  const STATUSES = ['pending','tested','failed'];
+  const SCHEMA_VERSION = 2;
+
+  let models = [];
+  let tagCatalog = [];
+  let backendCatalog = [];
+  let activeStatus = 'all';
+  let activeTags = new Set();
+  let editingId = null;
+  let modalStatus = 'pending';
+
+  // File System Access API state
+  let fileHandle = null;       // FileSystemFileHandle (writable) or null
+  let fileName = null;          // string for display
+  let dirty = false;            // unsaved changes flag
+  let saveTimer = null;
+  let saveStatusTimer = null;
+
+  // ---- File I/O (File System Access API) -------------------------------
+
+  function isFsApiSupported() {
+    return typeof window !== 'undefined'
+      && 'showOpenFilePicker' in window
+      && 'showSaveFilePicker' in window;
+  }
+
+  function buildFilePayload() {
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      models: models,
+      tagCatalog: tagCatalog,
+      backendCatalog: backendCatalog
+    };
+  }
+
+  function setFileNameLabel() {
+    const el = document.getElementById('fileName');
+    const saveBtn = document.getElementById('saveFileBtn');
+    if (!fileName) {
+      el.textContent = 'No file open';
+      el.classList.remove('loaded', 'unsaved');
+      saveBtn.disabled = true;
+    } else {
+      el.textContent = fileName;
+      el.classList.add('loaded');
+      el.classList.toggle('unsaved', dirty);
+      saveBtn.disabled = !dirty && !fileHandle; // enabled when dirty or no handle yet
+    }
+  }
+
+  function showSaveStatus(text, color) {
+    const el = document.getElementById('saveStatus');
+    el.textContent = text;
+    el.style.color = color || '#16a34a';
+    if (saveStatusTimer) clearTimeout(saveStatusTimer);
+    saveStatusTimer = setTimeout(function () { el.textContent = ''; }, 2500);
+  }
+
+  function applyLoadedData(data) {
+    if (!data || typeof data !== 'object') {
+      throw new Error('Invalid file: not an object');
+    }
+    if (!Array.isArray(data.models)) throw new Error('Invalid file: "models" must be an array');
+    if (!Array.isArray(data.tagCatalog)) throw new Error('Invalid file: "tagCatalog" must be an array');
+    if (!Array.isArray(data.backendCatalog)) {
+      // Migration: schemaVersion 1 had no backendCatalog. Default to DEFAULT_BACKENDS.
+      data.backendCatalog = DEFAULT_BACKENDS.slice();
+    } else {
+      // Validate each backend: { name: string, engine: 'openai'|'anthropic'|'ollama' }
+      data.backendCatalog.forEach(function (b, i) {
+        if (!b || typeof b !== 'object') throw new Error('Backend #' + (i + 1) + ' is not an object');
+        if (typeof b.name !== 'string') throw new Error('Backend #' + (i + 1) + ' is missing "name"');
+        if (['openai','anthropic','ollama'].indexOf(b.engine) < 0) b.engine = 'openai';
+      });
+    }
+    // Soft validation per model
+    data.models.forEach(function (m, i) {
+      if (!m || typeof m !== 'object') throw new Error('Model #' + (i + 1) + ' is not an object');
+      if (typeof m.backend !== 'string' || typeof m.name !== 'string') {
+        throw new Error('Model #' + (i + 1) + ' is missing backend or name');
+      }
+      if (STATUSES.indexOf(m.status) < 0) m.status = 'pending';
+      if (!Array.isArray(m.tags)) m.tags = [];
+    });
+    models = data.models;
+    tagCatalog = data.tagCatalog;
+    backendCatalog = data.backendCatalog;
+  }
+
+  async function writeToHandle(handle, payload) {
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(payload, null, 2));
+    await writable.close();
+  }
+
+  async function saveNow() {
+    if (!fileHandle) {
+      // No handle: prompt user to pick destination
+      await saveAs();
+      return;
+    }
+    const payload = buildFilePayload();
+    try {
+      await writeToHandle(fileHandle, payload);
+      dirty = false;
+      setFileNameLabel();
+      showSaveStatus('Saved', '#16a34a');
+    } catch (err) {
+      // Permission lost or similar
+      console.error('Save failed:', err);
+      showSaveStatus('Save failed', '#dc2626');
+    }
+  }
+
+  function scheduleAutoSave() {
+    dirty = true;
+    setFileNameLabel();
+    if (!fileHandle) return; // no auto-save without a handle
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { saveNow(); }, 600);
+  }
+
+  async function newFile() {
+    if (dirty && !confirm('You have unsaved changes. Discard and start a new file?')) return;
+    if (!isFsApiSupported()) {
+      alert('Your browser does not support the File System Access API. Use Chrome, Edge or Opera.');
+      return;
+    }
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'model-tester.json',
+        types: [{ description: 'JSON file', accept: { 'application/json': ['.json'] } }]
+      });
+      // Initialize empty state
+      models = [];
+      tagCatalog = DEFAULT_TAGS.slice();
+      backendCatalog = DEFAULT_BACKENDS.slice();
+      fileHandle = handle;
+      fileName = handle.name;
+      const payload = buildFilePayload();
+      await writeToHandle(handle, payload);
+      dirty = false;
+      setFileNameLabel();
+      rerenderAll();
+      showSaveStatus('New file created', '#16a34a');
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+      console.error('New file failed:', err);
+      alert('Could not create file: ' + (err && err.message ? err.message : err));
+    }
+  }
+
+  async function openFile() {
+    if (dirty && !confirm('You have unsaved changes. Discard and open another file?')) return;
+    if (!isFsApiSupported()) {
+      alert('Your browser does not support the File System Access API. Use Chrome, Edge or Opera.');
+      return;
+    }
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        multiple: false,
+        types: [{ description: 'JSON file', accept: { 'application/json': ['.json'] } }]
+      });
+      const file = await handle.getFile();
+      const text = await file.text();
+      const data = JSON.parse(text);
+      applyLoadedData(data);
+      fileHandle = handle;
+      fileName = handle.name;
+      dirty = false;
+      setFileNameLabel();
+      rerenderAll();
+      showSaveStatus('Loaded', '#16a34a');
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+      console.error('Open file failed:', err);
+      alert('Could not open file: ' + (err && err.message ? err.message : err));
+    }
+  }
+
+  async function saveAs() {
+    if (!isFsApiSupported()) {
+      alert('Your browser does not support the File System Access API. Use Chrome, Edge or Opera.');
+      return;
+    }
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName || 'model-tester.json',
+        types: [{ description: 'JSON file', accept: { 'application/json': ['.json'] } }]
+      });
+      const payload = buildFilePayload();
+      await writeToHandle(handle, payload);
+      fileHandle = handle;
+      fileName = handle.name;
+      dirty = false;
+      setFileNameLabel();
+      showSaveStatus('Saved', '#16a34a');
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+      console.error('Save as failed:', err);
+      alert('Could not save: ' + (err && err.message ? err.message : err));
+    }
+  }
+
+  // ---- App state helpers -----------------------------------------------
+
+  function rerenderAll() {
+    renderCounter();
+    renderStatusFilters();
+    renderTagFilters();
+    renderTable();
+  }
+
+  function markDirty() { scheduleAutoSave(); }
+  function markDirtyAndRender() { markDirty(); rerenderAll(); }
+
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
+  function getFilteredModels() {
+    return models.filter(function (m) {
+      if (activeStatus !== 'all' && m.status !== activeStatus) return false;
+      for (const t of activeTags) if (!m.tags.includes(t)) return false;
+      return true;
+    });
+  }
+  function getAllTagsInUse() {
+    const set = new Set(tagCatalog);
+    models.forEach(function (m) { m.tags.forEach(function (t) { set.add(t); }); });
+    return Array.from(set).sort();
+  }
+
+  function makeEl(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function renderCounter() {
+    const n = models.length;
+    document.getElementById('counter').textContent = n + (n === 1 ? ' model' : ' models');
+  }
+
+  function renderStatusFilters() {
+    const el = document.getElementById('statusFilters');
+    el.replaceChildren();
+    ['all'].concat(STATUSES).forEach(function (s) {
+      const btn = makeEl('button', 'chip' + (activeStatus === s ? ' active' : ''),
+        s.charAt(0).toUpperCase() + s.slice(1));
+      btn.addEventListener('click', function () {
+        activeStatus = s;
+        renderStatusFilters();
+        renderTable();
+      });
+      el.appendChild(btn);
+    });
+  }
+
+  function renderTagFilters() {
+    const el = document.getElementById('tagFilters');
+    el.replaceChildren();
+    const tags = getAllTagsInUse();
+    if (tags.length === 0) {
+      const span = makeEl('span', null, 'No tags yet');
+      span.style.color = 'var(--muted)';
+      span.style.fontSize = '12px';
+      el.appendChild(span);
+      return;
+    }
+    tags.forEach(function (t) {
+      const cls = 'chip' + (activeTags.has(t) ? ' active' : '') +
+        (tagCatalog.includes(t) ? '' : ' tag-chip-custom');
+      const btn = makeEl('button', cls, t);
+      btn.addEventListener('click', function () {
+        if (activeTags.has(t)) activeTags.delete(t); else activeTags.add(t);
+        renderTagFilters();
+        renderTable();
+      });
+      el.appendChild(btn);
+    });
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tbody');
+    const empty = document.getElementById('empty');
+    const filtered = getFilteredModels();
+    tbody.replaceChildren();
+
+    if (models.length === 0) {
+      empty.style.display = 'block';
+      empty.textContent = fileName
+        ? 'Empty file. Click + Add model to start.'
+        : 'No file open. Click "New file" or "Open" to start. Or "New file" to choose a location and begin.';
+      return;
+    }
+    if (filtered.length === 0) {
+      empty.style.display = 'block';
+      empty.textContent = 'No models match the current filters.';
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtered.forEach(function (m) {
+      const tr = document.createElement('tr');
+
+      const tdBackend = document.createElement('td');
+      const backendText = m.backend;
+      const inCat = isBackendInCatalog(backendText);
+      const engine = backendEngine(backendText);
+      const backendSpan = makeEl('span', null, backendText);
+      backendSpan.style.fontSize = '13px';
+      tdBackend.appendChild(backendSpan);
+      tdBackend.appendChild(document.createTextNode(' '));
+      const engineBadge = makeEl('span',
+        'badge badge-tag' + (inCat ? '' : ' badge-tag-custom'),
+        inCat ? engine : engine + ' (custom)');
+      tdBackend.appendChild(engineBadge);
+      tr.appendChild(tdBackend);
+
+      const tdName = document.createElement('td');
+      const nameSpan = makeEl('span', 'model-name', m.name);
+      tdName.appendChild(nameSpan);
+      tr.appendChild(tdName);
+
+      const tdStatus = document.createElement('td');
+      const statusBadge = makeEl('span', 'badge badge-status-' + m.status, m.status);
+      tdStatus.appendChild(statusBadge);
+      tr.appendChild(tdStatus);
+
+      const tdTags = document.createElement('td');
+      const tagList = makeEl('div', 'tag-list');
+      if (m.tags.length === 0) {
+        const span = makeEl('span', null, '');
+        span.style.color = 'var(--muted)';
+        span.style.fontSize = '12px';
+        tagList.appendChild(span);
+      } else {
+        m.tags.forEach(function (t) {
+          const isCustom = !tagCatalog.includes(t);
+          const cls = 'badge badge-tag' + (isCustom ? ' badge-tag-custom' : '');
+          const badge = makeEl('span', cls, t + (isCustom ? ' (custom)' : ''));
+          tagList.appendChild(badge);
+        });
+      }
+      tdTags.appendChild(tagList);
+      tr.appendChild(tdTags);
+
+      const tdNotes = document.createElement('td');
+      const notesDiv = makeEl('div', 'notes-cell', m.notes || '');
+      notesDiv.title = m.notes || '';
+      tdNotes.appendChild(notesDiv);
+      tr.appendChild(tdNotes);
+
+      const tdActions = document.createElement('td');
+      const actionsDiv = makeEl('div', 'actions');
+
+      const editBtn = makeEl('button', 'icon-btn', '');
+      editBtn.textContent = '\u270E'; editBtn.title = 'Edit';
+      editBtn.addEventListener('click', function () { openModelModal(m); });
+      actionsDiv.appendChild(editBtn);
+
+      const delBtn = makeEl('button', 'icon-btn', '');
+      delBtn.textContent = '\u2716'; delBtn.title = 'Delete';
+      delBtn.addEventListener('click', function () {
+        if (confirm('Delete model "' + m.name + '"?')) {
+          models = models.filter(function (x) { return x.id !== m.id; });
+          markDirtyAndRender();
+        }
+      });
+      actionsDiv.appendChild(delBtn);
+
+      tdActions.appendChild(actionsDiv);
+      tr.appendChild(tdActions);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderBackendSelect(selected) {
+    const sel = document.getElementById('backendSelect');
+    const customField = document.getElementById('customBackendField');
+    const customInput = document.getElementById('backendCustomInput');
+    sel.replaceChildren();
+    const catalogNames = getBackendNames();
+    catalogNames.forEach(function (name) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    });
+    // Custom option always present
+    const optCustom = document.createElement('option');
+    optCustom.value = '__custom__';
+    optCustom.textContent = 'Custom\u2026';
+    sel.appendChild(optCustom);
+    // Decide selection
+    const selVal = selected || (catalogNames[0] || '__custom__');
+    if (catalogNames.indexOf(selVal) >= 0) {
+      sel.value = selVal;
+      customField.style.display = 'none';
+    } else {
+      sel.value = '__custom__';
+      customField.style.display = '';
+      customInput.value = selVal;
+    }
+  }
+
+  function openModelModal(model) {
+    editingId = model ? model.id : null;
+    document.getElementById('modalTitle').textContent = model ? 'Edit model' : 'Add model';
+    renderBackendSelect(model ? model.backend : '');
+    document.getElementById('backendCustomInput').value = '';
+    document.getElementById('nameInput').value = model ? model.name : '';
+    document.getElementById('notesInput').value = model ? model.notes : '';
+    document.getElementById('newTagInput').value = '';
+    modalStatus = model ? model.status : 'pending';
+    setStatusSegmented();
+    renderTagCheckboxes(model ? model.tags : []);
+    document.getElementById('modelModal').classList.add('open');
+    document.getElementById('nameInput').focus();
+  }
+  function closeModelModal() {
+    document.getElementById('modelModal').classList.remove('open');
+    editingId = null;
+  }
+  function setStatusSegmented() {
+    document.querySelectorAll('#statusSegmented button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.status === modalStatus);
+    });
+  }
+  function renderTagCheckboxes(selected) {
+    const el = document.getElementById('tagCheckboxes');
+    el.replaceChildren();
+    const sel = new Set(selected);
+    if (tagCatalog.length === 0) {
+      const span = makeEl('span', null, 'No tags in catalog. Use Manage tags to add.');
+      span.style.color = 'var(--muted)';
+      span.style.fontSize = '12px';
+      el.appendChild(span);
+      return;
+    }
+    tagCatalog.forEach(function (t) {
+      const label = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = t;
+      cb.checked = sel.has(t);
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(' ' + t));
+      el.appendChild(label);
+    });
+  }
+  function saveModelFromModal() {
+    const sel = document.getElementById('backendSelect').value;
+    const customInput = document.getElementById('backendCustomInput');
+    const backend = sel === '__custom__' ? customInput.value.trim() : sel;
+    const name = document.getElementById('nameInput').value.trim();
+    const notes = document.getElementById('notesInput').value;
+    const newTagRaw = document.getElementById('newTagInput').value.trim();
+    if (!backend || !name) { alert('Backend and model name are required.'); return; }
+
+    if (newTagRaw && !tagCatalog.includes(newTagRaw)) {
+      tagCatalog.push(newTagRaw);
+      markDirty();
+    }
+    const selectedTags = Array.from(
+      document.querySelectorAll('#tagCheckboxes input:checked')
+    ).map(function (cb) { return cb.value; });
+    if (newTagRaw) selectedTags.push(newTagRaw);
+
+    if (editingId) {
+      const m = models.find(function (x) { return x.id === editingId; });
+      if (m) { m.backend = backend; m.name = name; m.status = modalStatus;
+        m.notes = notes; m.tags = selectedTags; }
+    } else {
+      models.push({ id: newId(), backend: backend, name: name,
+        status: modalStatus, notes: notes, tags: selectedTags });
+    }
+    closeModelModal();
+    markDirtyAndRender();
+  }
+
+  function openTagModal() {
+    renderTagManagerList();
+    document.getElementById('newTagManagerInput').value = '';
+    document.getElementById('tagModal').classList.add('open');
+    document.getElementById('newTagManagerInput').focus();
+  }
+  function closeTagModal() { document.getElementById('tagModal').classList.remove('open'); }
+  function renderTagManagerList() {
+    const el = document.getElementById('tagManagerList');
+    el.replaceChildren();
+    if (tagCatalog.length === 0) {
+      const span = makeEl('span', null, 'No tags. Add some below.');
+      span.style.color = 'var(--muted)';
+      span.style.fontSize = '12px';
+      el.appendChild(span);
+      return;
+    }
+    tagCatalog.forEach(function (t, idx) {
+      const chip = makeEl('span', 'tag-chip', t);
+      const x = makeEl('button', null, '');
+      x.title = 'Remove';
+      x.addEventListener('click', function () {
+        tagCatalog.splice(idx, 1);
+        markDirty();
+        renderTagManagerList();
+      });
+      chip.appendChild(x);
+      el.appendChild(chip);
+    });
+  }
+  function addTagFromManager() {
+    const input = document.getElementById('newTagManagerInput');
+    const v = input.value.trim();
+    if (!v || tagCatalog.includes(v)) { input.value = ''; return; }
+    tagCatalog.push(v);
+    markDirty();
+    input.value = '';
+    renderTagManagerList();
+  }
+
+  // ---- Provider management ----------------------------------------------
+
+  function getBackendNames() {
+    return backendCatalog.map(function (b) { return b.name; });
+  }
+  function findBackend(name) {
+    const lc = String(name || '').toLowerCase();
+    for (let i = 0; i < backendCatalog.length; i++) {
+      if (backendCatalog[i].name.toLowerCase() === lc) return backendCatalog[i];
+    }
+    return null;
+  }
+  function isBackendInCatalog(name) {
+    return !!findBackend(name);
+  }
+  function backendEngine(name) {
+    const b = findBackend(name);
+    return b ? b.engine : 'openai';
+  }
+
+  function openProviderModal() {
+    document.getElementById('newProviderNameInput').value = '';
+    setNewProviderEngine('openai');
+    renderProviderManagerList();
+    document.getElementById('providerModal').classList.add('open');
+    document.getElementById('newProviderNameInput').focus();
+  }
+  function closeProviderModal() {
+    document.getElementById('providerModal').classList.remove('open');
+  }
+  function setNewProviderEngine(engine) {
+    document.querySelectorAll('#newProviderEngineSegmented button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.engine === engine);
+    });
+    newProviderEngine = engine;
+  }
+  let newProviderEngine = 'openai';
+
+  function renderProviderManagerList() {
+    const el = document.getElementById('providerManagerList');
+    el.replaceChildren();
+    if (backendCatalog.length === 0) {
+      const span = makeEl('span', null, 'No providers. Add some below.');
+      span.style.color = 'var(--muted)';
+      span.style.fontSize = '12px';
+      el.appendChild(span);
+      return;
+    }
+    backendCatalog.forEach(function (b, idx) {
+      const chip = makeEl('span', 'tag-chip', b.name + ' (' + b.engine + ')');
+      const x = makeEl('button', null, '\u00D7');
+      x.title = 'Remove';
+      x.addEventListener('click', function () {
+        backendCatalog.splice(idx, 1);
+        markDirty();
+        renderProviderManagerList();
+      });
+      chip.appendChild(x);
+      el.appendChild(chip);
+    });
+  }
+
+  function addProviderFromManager() {
+    const input = document.getElementById('newProviderNameInput');
+    const v = input.value.trim();
+    if (!v) return;
+    if (isBackendInCatalog(v)) { input.value = ''; return; }
+    backendCatalog.push({ name: v, engine: newProviderEngine });
+    markDirty();
+    input.value = '';
+    renderProviderManagerList();
+  }
+
+  function bindEvents() {
+    document.getElementById('addBtn').addEventListener('click', function () { openModelModal(null); });
+    document.getElementById('manageTagsBtn').addEventListener('click', openTagModal);
+    document.getElementById('manageProvidersBtn').addEventListener('click', openProviderModal);
+    document.getElementById('closeProviderModal').addEventListener('click', closeProviderModal);
+    document.getElementById('doneProviders').addEventListener('click', function () {
+      closeProviderModal();
+      renderTable();
+    });
+    document.getElementById('addProviderBtn').addEventListener('click', addProviderFromManager);
+    document.getElementById('newProviderNameInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') addProviderFromManager();
+    });
+    document.querySelectorAll('#newProviderEngineSegmented button').forEach(function (b) {
+      b.addEventListener('click', function () { setNewProviderEngine(b.dataset.engine); });
+    });
+    document.getElementById('providerModal').addEventListener('click', function (e) {
+      if (e.target.id === 'providerModal') closeProviderModal();
+    });
+    document.getElementById('closeModelModal').addEventListener('click', closeModelModal);
+    document.getElementById('cancelModel').addEventListener('click', closeModelModal);
+    document.getElementById('saveModel').addEventListener('click', saveModelFromModal);
+    document.getElementById('closeTagModal').addEventListener('click', closeTagModal);
+    document.getElementById('doneTags').addEventListener('click', function () {
+      closeTagModal();
+      renderTagFilters();
+      renderTable();
+    });
+    document.getElementById('addTagBtn').addEventListener('click', addTagFromManager);
+    document.getElementById('newTagManagerInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') addTagFromManager();
+    });
+    document.querySelectorAll('#statusSegmented button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        modalStatus = b.dataset.status;
+        setStatusSegmented();
+      });
+    });
+    document.getElementById('modelModal').addEventListener('click', function (e) {
+      if (e.target.id === 'modelModal') closeModelModal();
+    });
+    document.getElementById('backendSelect').addEventListener('change', function () {
+      const customField = document.getElementById('customBackendField');
+      if (this.value === '__custom__') {
+        customField.style.display = '';
+        document.getElementById('backendCustomInput').focus();
+      } else {
+        customField.style.display = 'none';
+      }
+    });
+    document.getElementById('tagModal').addEventListener('click', function (e) {
+      if (e.target.id === 'tagModal') closeTagModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeModelModal(); closeTagModal(); }
+    });
+
+    // File bar
+    document.getElementById('newFileBtn').addEventListener('click', newFile);
+    document.getElementById('openFileBtn').addEventListener('click', openFile);
+    document.getElementById('saveFileBtn').addEventListener('click', saveNow);
+
+    // Warn before unload if dirty
+    window.addEventListener('beforeunload', function (e) {
+      if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+  }
+
+  setFileNameLabel();
+  bindEvents();
+  rerenderAll();
+})();
+</script>
+</body>
+</html>
