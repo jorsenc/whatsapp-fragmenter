@@ -25,8 +25,6 @@ export const LANGUAGE_PATTERNS = {
       /eliminó a/i,
       /dejó el grupo/i,
       /fue agregado/i,
-      /bloqueaste a/i,
-      /desbloqueaste a/i,
       /los mensajes y las llamadas están cifrados/i,
       /mensajes cifrados/i,
       /solo las personas en este chat/i
