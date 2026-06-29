@@ -2,10 +2,20 @@
 echo Iniciando Workspace Explorer...
 echo.
 
+REM Matar procesos en el puerto 8080
+echo Verificando puerto 8080...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8080') do (
+    echo Matando proceso: %%a
+    taskkill /PID %%a /F 2>nul
+)
+
+REM Espera un momento
+timeout /t 1 /nobreak
+
 REM Inicia el servidor Node.js desde la carpeta .workspace_app
 start cmd /k "cd /d "%~dp0.workspace_app" && node server.js"
 
-REM Espera un segundo para que el servidor inicie
+REM Espera a que el servidor inicie
 timeout /t 2 /nobreak
 
 REM Abre el navegador
