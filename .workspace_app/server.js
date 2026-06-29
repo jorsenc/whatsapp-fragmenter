@@ -28,20 +28,22 @@ const server = http.createServer((req, res) => {
 
     // Ruta para servir archivos del workspace
     if (req.url.startsWith('/workspace-files/')) {
-        const relativePath = req.url.substring('/workspace-files/'.length);
-        const filePath = path.join(WORKSPACE_ROOT, decodeURIComponent(relativePath));
+        const relativePath = decodeURIComponent(req.url.substring('/workspace-files/'.length));
+        const filePath = path.normalize(path.join(WORKSPACE_ROOT, relativePath));
+        const normalizedRoot = path.normalize(WORKSPACE_ROOT);
 
         // Validar que el path está dentro del workspace
-        if (!filePath.startsWith(WORKSPACE_ROOT)) {
+        if (!filePath.startsWith(normalizedRoot)) {
             res.writeHead(403, { 'Content-Type': 'text/plain' });
             res.end('Acceso denegado');
             return;
         }
 
-        fs.readFile(filePath, (err, data) => {
+        fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
+                console.error(`Error leyendo ${filePath}:`, err.message);
                 res.writeHead(404, { 'Content-Type': 'text/plain' });
-                res.end('Archivo no encontrado');
+                res.end('Archivo no encontrado: ' + err.message);
                 return;
             }
 
