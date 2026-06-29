@@ -8,14 +8,10 @@ import path from 'path';
 import fs from 'fs/promises';
 import fsSync from 'fs';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
 import WhatsappParser from '../parser/whatsappParser.js';
 import MonthFragmenter from '../fragmenter/monthFragmenter.js';
 import MarkdownGenerator from '../generators/markdownGenerator.js';
 import IndexGenerator from '../generators/indexGenerator.js';
-
-const require = createRequire(import.meta.url);
-const archiver = require('archiver');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -187,19 +183,11 @@ app.post('/api/process', async (req, res) => {
     const indexPath = path.join(outputDir, 'INDICE_FRAGMENTOS.md');
     await fs.writeFile(indexPath, indexMarkdown, 'utf-8');
 
-    // Create ZIP file
-    const zipFilename = `fragmentos_${baseName}.zip`;
-    const zipPath = path.join(OUTPUT_DIR, zipFilename);
-
-    await createZipFile(outputDir, zipPath);
-
     // Update upload status
     upload.status = 'completed';
     upload.fragmentCount = fragmentFiles.length;
     upload.totalMessages = messages.length;
     upload.outputDir = outputDir;
-    upload.zipPath = zipPath;
-    upload.zipFilename = zipFilename;
 
     res.json({
       status: 'success',
@@ -212,8 +200,6 @@ app.post('/api/process', async (req, res) => {
         lines: f.lines,
         size: f.size
       })),
-      indexFile: 'INDICE_FRAGMENTOS.md',
-      zipFile: zipFilename,
       outputDir: outputDir
     });
 
@@ -222,67 +208,6 @@ app.post('/api/process', async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: error.message
-    });
-  }
-});
-
-/**
- * Create ZIP file from directory
- */
-async function createZipFile(sourceDir, destPath) {
-  return new Promise((resolve, reject) => {
-    try {
-      const output = fsSync.createWriteStream(destPath);
-      // Create archive instance
-      const archive = archiver.create('zip', { zlib: { level: 9 } });
-
-      output.on('close', resolve);
-      archive.on('error', reject);
-      output.on('error', reject);
-
-      archive.pipe(output);
-      archive.directory(sourceDir, false);
-      archive.finalize();
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
-/**
- * GET /api/download-zip/:uploadId - Download ZIP with all fragments
- */
-app.get('/api/download-zip/:uploadId', (req, res) => {
-  try {
-    const { uploadId } = req.params;
-
-    if (!uploads.has(uploadId)) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Upload not found'
-      });
-    }
-
-    const upload = uploads.get(uploadId);
-
-    if (!upload.zipPath || !fsSync.existsSync(upload.zipPath)) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'ZIP file not found'
-      });
-    }
-
-    res.setHeader('Content-Disposition', `attachment; filename="${upload.zipFilename}"`);
-    res.setHeader('Content-Type', 'application/zip');
-
-    const stream = fsSync.createReadStream(upload.zipPath);
-    stream.pipe(res);
-
-  } catch (error) {
-    console.error('Download error:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Server error during download'
     });
   }
 });
