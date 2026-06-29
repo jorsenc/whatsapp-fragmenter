@@ -1,13 +1,15 @@
 /**
  * WhatsApp Parser - Automatic format detection and message parsing
- * Supports: Spanish, English, Portuguese, French
+ * Supports: Spanish, English, Portuguese, French, German, Italian
  */
+
+import { LANGUAGE_PATTERNS, MEDIA_PATTERNS, detectLanguage } from './languagePatterns.js';
 
 class WhatsappParser {
   constructor(content) {
     this.lines = content.split('\n');
     this.messages = [];
-    this.detectedFormat = null;
+    this.detectedLanguage = null;
     this.skipSystemMessages = true;
     this.skipMediaMessages = true;
   }
@@ -17,91 +19,44 @@ class WhatsappParser {
    * Tries multiple regex patterns to determine language/format
    */
   detectFormat() {
-    const sampleLines = this.lines.slice(0, 100).join('\n');
+    this.detectedLanguage = detectLanguage(this.lines.join('\n'));
 
-    const patterns = {
-      'es-DD/M/YY': /\[\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2}:\d{2}\]/,
-      'en-M/DD/YY': /\[\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2}:\d{2}\s(?:AM|PM)\]/,
-      'pt-DD/M/YY': /\[\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2}:\d{2}\]/,
-      'fr-DD/M/YY': /\[\d{1,2}\/\d{1,2}\/\d{2}\s\d{1,2}:\d{2}:\d{2}\]/
-    };
-
-    for (const [format, regex] of Object.entries(patterns)) {
-      if (regex.test(sampleLines)) {
-        this.detectedFormat = format;
-        return format;
-      }
+    if (!this.detectedLanguage) {
+      throw new Error('Could not detect WhatsApp format. Ensure file is valid export.');
     }
 
-    throw new Error('Could not detect WhatsApp format. Ensure file is valid export.');
+    return this.detectedLanguage;
   }
 
   /**
    * Get compiled regex pattern based on detected format
    */
   getRegex() {
-    const regexMap = {
-      'es-DD/M/YY': /^\[(\d{1,2}\/\d{1,2}\/\d{2}),\s(\d{1,2}:\d{2}:\d{2})\]\s([^:]+):\s(.+)$/,
-      'en-M/DD/YY': /^\[(\d{1,2}\/\d{1,2}\/\d{2}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s([^:]+):\s(.+)$/,
-      'pt-DD/M/YY': /^\[(\d{1,2}\/\d{1,2}\/\d{2}),\s(\d{1,2}:\d{2}:\d{2})\]\s([^:]+):\s(.+)$/,
-      'fr-DD/M/YY': /^\[(\d{1,2}\/\d{1,2}\/\d{2})\s(\d{1,2}:\d{2}:\d{2})\]\s([^:]+):\s(.+)$/
-    };
-
-    if (!this.detectedFormat) {
+    if (!this.detectedLanguage) {
       this.detectFormat();
     }
 
-    return regexMap[this.detectedFormat];
+    const languageInfo = LANGUAGE_PATTERNS[this.detectedLanguage];
+    return languageInfo.regex;
   }
 
   /**
    * Check if a line is a system message
-   * Examples: "Usuario entró al grupo", "Usuario cambió el nombre"
    */
   isSystemMessage(line) {
-    const systemPatterns = [
-      /entró al grupo/i,
-      /salió del grupo/i,
-      /cambió el nombre/i,
-      /cambió la foto/i,
-      /cambió la descripción/i,
-      /cambió la configuración/i,
-      /cambió los datos del grupo/i,
-      /llamada perdida/i,
-      /creó el grupo/i,
-      /agregó a/i,
-      /eliminó a/i,
-      /dejó el grupo/i,
-      /has left/i,
-      /created group/i,
-      /added/i,
-      /removed/i,
-      /changed the/i
-    ];
+    if (!this.detectedLanguage) {
+      this.detectFormat();
+    }
 
-    return systemPatterns.some(pattern => pattern.test(line));
+    const languageInfo = LANGUAGE_PATTERNS[this.detectedLanguage];
+    return languageInfo.systemMessagePatterns.some(pattern => pattern.test(line));
   }
 
   /**
    * Check if a message is media
-   * Examples: [Imagen], [Video], [Audio], <Media omitted>
    */
   isMediaMessage(content) {
-    const mediaPatterns = [
-      /^\[Imagen\]$/i,
-      /^\[Video\]$/i,
-      /^\[Audio\]$/i,
-      /^\[Documento\]$/i,
-      /^\[Archivo\]$/i,
-      /^\[GIF\]$/i,
-      /^\[Sticker\]$/i,
-      /^<Media omitted>$/i,
-      /^\[image omitted\]$/i,
-      /^\[video omitted\]$/i,
-      /^\[audio omitted\]$/i
-    ];
-
-    return mediaPatterns.some(pattern => pattern.test(content.trim()));
+    return MEDIA_PATTERNS.some(pattern => pattern.test(content.trim()));
   }
 
   /**
@@ -186,14 +141,27 @@ class WhatsappParser {
    * Get detected format information
    */
   getFormatInfo() {
-    if (!this.detectedFormat) {
+    if (!this.detectedLanguage) {
       this.detectFormat();
     }
+    const languageInfo = LANGUAGE_PATTERNS[this.detectedLanguage];
     return {
-      format: this.detectedFormat,
+      languageCode: this.detectedLanguage,
+      languageName: languageInfo.name,
       messageCount: this.messages.length,
       uniqueUsers: new Set(this.messages.map(m => m.user)).size
     };
+  }
+
+  /**
+   * Get list of supported languages
+   */
+  static getSupportedLanguages() {
+    return Object.entries(LANGUAGE_PATTERNS).map(([code, info]) => ({
+      code,
+      name: info.name,
+      dateFormat: info.dateFormat
+    }));
   }
 }
 
