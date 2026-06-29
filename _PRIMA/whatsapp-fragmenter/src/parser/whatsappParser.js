@@ -84,8 +84,8 @@ class WhatsappParser {
         // Convert to ISO 8601 timestamp
         const timestamp = this.normalizeTimestamp(date, time);
 
-        // Skip if system message
-        if (this.skipSystemMessages && this.isSystemMessage(line)) {
+        // Skip if system message (check content, not full line)
+        if (this.skipSystemMessages && this.isSystemMessage(content)) {
           continue;
         }
 
