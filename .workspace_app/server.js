@@ -13,7 +13,7 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
 
         try {
-            execSync('node .app/scan-workspace.js', { cwd: WORKSPACE_ROOT });
+            execSync('node .workspace_app/scan-workspace.js', { cwd: WORKSPACE_ROOT });
 
             const jsonPath = path.join(APP_ROOT, 'workspace-data.json');
             const data = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
