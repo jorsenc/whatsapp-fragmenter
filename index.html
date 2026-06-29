@@ -841,8 +841,11 @@
             return `${(totalBytes / (1024 * 1024)).toFixed(1)} GB`;
         }
 
+        let filteredProjects = [];
+
         function renderProjects(projects) {
             const list = document.getElementById('projectsList');
+            filteredProjects = projects;
 
             if (projects.length === 0) {
                 list.innerHTML = '<div class="no-results">No se encontraron proyectos</div>';
@@ -860,7 +863,7 @@
         }
 
         function selectProject(index) {
-            const project = allProjects[index];
+            const project = filteredProjects[index];
             const items = document.querySelectorAll('.project-item');
             items.forEach(item => item.classList.remove('active'));
             items[index].classList.add('active');

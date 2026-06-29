@@ -1,5 +1,5 @@
 {
-  "scannedAt": "2026-06-29T00:59:38.601Z",
+  "scannedAt": "2026-06-29T01:31:40.952Z",
   "workspace": "C:\\WORKSPACE",
   "projectCount": 18,
   "projects": [
@@ -176,7 +176,11 @@
       "path": "./AMAZON-KDP",
       "type": "Documentation",
       "intelligentType": [
-        "Documentation"
+        "Documentation",
+        "Email Service",
+        "Search Engine",
+        "Authentication",
+        "UI Component"
       ],
       "description": "This workspace contains a comprehensive Spanish-language guide: **\"Optimización Profesional de la Ficha de Producto en Amazon KDP\"** — a detailed manu",
       "techStack": [
@@ -855,7 +859,11 @@
         "Backend API",
         "Express Server",
         "Testing Tool",
-        "JavaScript"
+        "JavaScript",
+        "Mobile App",
+        "Cache System",
+        "UI Component",
+        "Demo/Example"
       ],
       "description": "# Birthday Manager",
       "techStack": [
@@ -987,7 +995,12 @@
       "path": "./chrome-extension",
       "type": "Documentation",
       "intelligentType": [
-        "Documentation"
+        "Documentation",
+        "Chat App",
+        "UI Component",
+        "Demo/Example",
+        "Plugin/Addon",
+        "Utility Tool"
       ],
       "description": "Una extensión Chrome muy simple que muestra \"¡Hola Mundo!\" cuando haces clic en el icono.",
       "techStack": [
@@ -1046,7 +1059,15 @@
         "MCP Server",
         "JavaScript Library",
         "AI/ML Model",
-        "TypeScript"
+        "TypeScript",
+        "Desktop App",
+        "Email Service",
+        "Search Engine",
+        "Authentication",
+        "Security",
+        "UI Component",
+        "Demo/Example",
+        "Utility Tool"
       ],
       "description": "A powerful Model Context Protocol (MCP) server that provides seamless integration with Google Drive, allowing AI models to search, list, and read file",
       "techStack": [
@@ -1404,7 +1425,11 @@
         "MCP Server",
         "Testing Tool",
         "Documentation",
-        "Python"
+        "Python",
+        "Analytics",
+        "UI Component",
+        "Demo/Example",
+        "Utility Tool"
       ],
       "description": "A Model Context Protocol (MCP) server for generating images using Pollinations.ai. **No API key required** — completely free!",
       "techStack": [
@@ -1884,7 +1909,9 @@
       "type": "Documentation",
       "intelligentType": [
         "MCP Server",
-        "Documentation"
+        "Documentation",
+        "UI Component",
+        "Utility Tool"
       ],
       "description": "**image-gen-mcp** is a Model Context Protocol (MCP) server that provides image generation capabilities to Claude and other LLM applications. It uses P",
       "techStack": [
@@ -2009,7 +2036,10 @@
       "intelligentType": [
         "MCP Server",
         "Documentation",
-        "Python"
+        "Python",
+        "Authentication",
+        "UI Component",
+        "Utility Tool"
       ],
       "description": "Installer and auth tools to connect **NotebookLM** to **Claude Code** via MCP on Windows.",
       "techStack": [
@@ -3255,7 +3285,13 @@
       "path": "./SDD",
       "type": "Documentation",
       "intelligentType": [
-        "Documentation"
+        "Documentation",
+        "Game Engine",
+        "Mobile App",
+        "Message Queue",
+        "Template/Starter",
+        "UI Component",
+        "Demo/Example"
       ],
       "description": "Una herramienta completa para automatizar **Spec-Driven Development** en Claude Code con especificaciones ejecutables EARS.",
       "techStack": [
@@ -3635,7 +3671,14 @@
       "intelligentType": [
         "Testing Tool",
         "Documentation",
-        "JavaScript"
+        "JavaScript",
+        "Game Engine",
+        "Blockchain",
+        "Database",
+        "Analytics",
+        "Security",
+        "UI Component",
+        "Utility Tool"
       ],
       "description": "TradeMaster Logger is a professional, lightweight, and privacy-focused trading journal designed to help traders log their operations, analyze performa",
       "techStack": [

@@ -211,9 +211,29 @@ function getLastModified(dirPath) {
   }
 }
 
+function getProjectContent(fullPath) {
+  let content = '';
+
+  try {
+    if (fs.existsSync(path.join(fullPath, 'README.md'))) {
+      content += fs.readFileSync(path.join(fullPath, 'README.md'), 'utf-8').toLowerCase();
+    }
+  } catch (e) {}
+
+  try {
+    if (fs.existsSync(path.join(fullPath, 'CLAUDE.md'))) {
+      content += ' ' + fs.readFileSync(path.join(fullPath, 'CLAUDE.md'), 'utf-8').toLowerCase();
+    }
+  } catch (e) {}
+
+  return content;
+}
+
 function classifyProject(fullPath, basicType, techStack, description) {
   const classifications = [];
   const files = fs.readdirSync(fullPath);
+  const projectContent = getProjectContent(fullPath);
+  const allText = (description + ' ' + projectContent).toLowerCase();
 
   // Lenguajes detectados
   const languages = new Set();
@@ -327,6 +347,42 @@ function classifyProject(fullPath, basicType, techStack, description) {
 
   // Agregar lenguajes a clasificaciones
   Array.from(languages).forEach(lang => classifications.push(lang));
+
+  // Deteccion dinamica de palabras clave
+  const keywordMap = {
+    'game|juego|engine|unity|unreal': 'Game Engine',
+    'blockchain|crypto|ethereum|solidity|web3': 'Blockchain',
+    'mobile|android|ios|flutter|react native': 'Mobile App',
+    'desktop|electron|tauri': 'Desktop App',
+    'email|smtp|mail': 'Email Service',
+    'chat|messaging|websocket': 'Chat App',
+    'video|streaming|ffmpeg': 'Video Processing',
+    'audio|music|spotify': 'Audio Processing',
+    'database|postgres|mongodb|mysql': 'Database',
+    'cache|redis|memcached': 'Cache System',
+    'queue|kafka|rabbitmq': 'Message Queue',
+    'search|elasticsearch|algolia': 'Search Engine',
+    'analytics|tracking|metrics': 'Analytics',
+    'payment|stripe|paypal': 'Payment Gateway',
+    'auth|oauth|jwt|authentication': 'Authentication',
+    'security|encryption|crypto': 'Security',
+    'monitoring|logging|observability': 'Monitoring',
+    'infrastructure|kubernetes|docker compose': 'Infrastructure',
+    'ci/cd|pipeline|github actions': 'CI/CD Pipeline',
+    'template|starter|boilerplate': 'Template/Starter',
+    'ui|component|design system': 'UI Component',
+    'demo|example|sample': 'Demo/Example',
+    'plugin|addon|extension': 'Plugin/Addon',
+    'utility|helper|tool': 'Utility Tool'
+  };
+
+  // Buscar palabras clave en el contenido
+  for (const [keywords, category] of Object.entries(keywordMap)) {
+    const keywordList = keywords.split('|');
+    if (keywordList.some(kw => allText.includes(kw))) {
+      classifications.push(category);
+    }
+  }
 
   // Remover duplicados y devolver
   return [...new Set(classifications)];
