@@ -293,16 +293,23 @@
         }
 
         function handleTreeClick(event, projectName, filePath, isPreviewable) {
-            const toggle = event.currentTarget.querySelector('.tree-toggle');
-            const children = event.currentTarget.querySelector('.tree-children');
+            event.stopPropagation();
 
-            if (toggle && toggle.textContent) {
+            // Si hace click en el toggle (expande/contrae)
+            if (event.target.classList.contains('tree-toggle')) {
+                const children = event.currentTarget.querySelector('.tree-children');
+                const toggle = event.target;
                 if (children) {
                     children.classList.toggle('open');
                     toggle.textContent = children.classList.contains('open') ? 'V' : '>';
                 }
-            } else if (isPreviewable && event.target.classList.contains('tree-name')) {
+                return;
+            }
+
+            // Si hace click en el nombre del archivo (previsualiza)
+            if (isPreviewable && event.target.classList.contains('tree-name')) {
                 previewTreeFile(projectName, filePath);
+                return;
             }
         }
 
