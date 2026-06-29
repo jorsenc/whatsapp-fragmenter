@@ -10,11 +10,14 @@ yarn-error.log*
 .env.local
 .env.*.local
 
-# Output files
+# Output files (generated chat fragments)
 output/
-*.md
+*.md.bak
+
+# Allowed markdown files
 !README.md
 !CLAUDE.md
+!DOCUMENTATION.md
 
 # IDE
 .vscode/
