@@ -360,13 +360,11 @@
         }
 
         async function loadFileContent(projectName, fileName) {
-            const project = allProjects.find(p => p.name === projectName);
-            if (!project) return;
-
-            const filePath = project.path + '/' + fileName;
+            const fileUrl = `/workspace-files/${projectName}/${fileName}`;
 
             try {
-                const response = await fetch(filePath);
+                const response = await fetch(fileUrl);
+                if (!response.ok) throw new Error('No encontrado');
                 let content = await response.text();
 
                 if (content.length > 50000) {
@@ -377,7 +375,7 @@
                 document.getElementById('modalContent').textContent = content;
                 document.getElementById('fileModal').classList.add('active');
             } catch (error) {
-                alert('No se pudo cargar ' + fileName);
+                alert('No se pudo cargar ' + fileName + ': ' + error.message);
             }
         }
 
