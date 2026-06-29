@@ -356,13 +356,34 @@ function showAbout() {
 /**
  * Open fragment viewer modal
  */
-function openFragmentViewer(filename, month) {
-  const content = fragmentContents[filename];
-  if (!content) return;
+async function openFragmentViewer(filename, month) {
+  const modal = document.getElementById('fragmentModal');
+  const titleEl = document.getElementById('fragmentTitle');
+  const contentEl = document.getElementById('fragmentContent');
 
-  document.getElementById('fragmentTitle').textContent = `📄 ${filename} (${month})`;
-  document.getElementById('fragmentContent').textContent = content;
-  document.getElementById('fragmentModal').classList.add('active');
+  // Show loading state
+  modal.classList.add('active');
+  titleEl.textContent = `📄 Cargando ${filename}...`;
+  contentEl.textContent = 'Cargando contenido...';
+
+  try {
+    // Fetch content from server
+    const url = `/api/download/${currentUploadId}/${filename}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Error al cargar el archivo');
+    }
+
+    const content = await response.text();
+
+    // Update modal with content
+    titleEl.textContent = `📄 ${filename} (${month})`;
+    contentEl.textContent = content;
+  } catch (error) {
+    titleEl.textContent = `❌ Error`;
+    contentEl.textContent = `No se pudo cargar el archivo: ${error.message}`;
+  }
 }
 
 /**
