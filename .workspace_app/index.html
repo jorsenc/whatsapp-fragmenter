@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workspace Explorer</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>
@@ -318,12 +319,32 @@
                         content = content.substring(0, 100000) + '\n\n... (archivo muy grande, contenido truncado)';
                     }
                     document.getElementById('modalTitle').textContent = `${projectName} / ${filePath}`;
-                    document.getElementById('modalContent').textContent = content;
+
+                    // Renderizar Markdown si es un archivo .md
+                    if (filePath.toLowerCase().endsWith('.md')) {
+                        const htmlContent = marked.parse(content);
+                        document.getElementById('modalContent').innerHTML = htmlContent;
+                    } else {
+                        // Para otros archivos, mostrar como texto plano en <pre>
+                        document.getElementById('modalContent').innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                    }
+
                     document.getElementById('fileModal').classList.add('active');
                 })
                 .catch(err => {
                     alert('No se pudo cargar: ' + filePath + '\n\n' + err.message);
                 });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
         }
 
         function formatBytes(bytes) {
