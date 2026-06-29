@@ -1,7 +1,7 @@
 {
-  "scannedAt": "2026-06-29T01:31:40.952Z",
+  "scannedAt": "2026-06-29T05:57:06.686Z",
   "workspace": "C:\\WORKSPACE",
-  "projectCount": 18,
+  "projectCount": 20,
   "projects": [
     {
       "name": "_PRIMA",
@@ -1052,6 +1052,34 @@
       }
     },
     {
+      "name": "ENGRAM-CLAUDE",
+      "path": "./ENGRAM-CLAUDE",
+      "type": "Mixed Project",
+      "intelligentType": [],
+      "description": "No description available",
+      "techStack": [
+        "Static/Mixed"
+      ],
+      "size": "0 B",
+      "lastModified": "2026-06-29",
+      "stats": {
+        "hasGit": false,
+        "hasTests": false,
+        "hasEnv": false,
+        "hasReadme": false,
+        "hasClaude": false,
+        "testFiles": []
+      },
+      "fileTree": [],
+      "files": {
+        "readme": false,
+        "claude": false,
+        "packageJson": false,
+        "setup": false,
+        "env": false
+      }
+    },
+    {
       "name": "gdrive-mcp-server",
       "path": "./gdrive-mcp-server",
       "type": "MCP Server",
@@ -1818,6 +1846,585 @@
       "files": {
         "readme": false,
         "claude": false,
+        "packageJson": false,
+        "setup": false,
+        "env": false
+      }
+    },
+    {
+      "name": "MARCOS_ON_TREND",
+      "path": "./MARCOS_ON_TREND",
+      "type": "Documentation",
+      "intelligentType": [
+        "Documentation",
+        "Mobile App",
+        "Video Processing",
+        "Audio Processing",
+        "Monitoring",
+        "CI/CD Pipeline",
+        "Template/Starter",
+        "UI Component",
+        "Demo/Example",
+        "Utility Tool"
+      ],
+      "description": "Suite de dos microservicios para analizar productos de Amazon y generar activos de marketing virales (análisis IA, guiones de YouTube Shorts, SEO, víd",
+      "techStack": [
+        "Static/Mixed"
+      ],
+      "size": "4.9 MB",
+      "lastModified": "2026-06-29",
+      "stats": {
+        "hasGit": true,
+        "hasTests": false,
+        "hasEnv": false,
+        "hasReadme": true,
+        "hasClaude": true,
+        "testFiles": []
+      },
+      "fileTree": [
+        {
+          "name": "CLAUDE.md",
+          "type": "file",
+          "size": 20126
+        },
+        {
+          "name": "DEBUG_QUICK_START.md",
+          "type": "file",
+          "size": 1265
+        },
+        {
+          "name": "DEV_DEBUG_GUIDE.md",
+          "type": "file",
+          "size": 8297
+        },
+        {
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "type": "file",
+          "size": 7714
+        },
+        {
+          "name": "Ollama",
+          "type": "file",
+          "size": 28
+        },
+        {
+          "name": "README.md",
+          "type": "file",
+          "size": 7118
+        },
+        {
+          "name": "STARTUP_GUIDE.md",
+          "type": "file",
+          "size": 6790
+        },
+        {
+          "name": "amz-product-expert",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": ".env.example",
+              "type": "file",
+              "size": 2444
+            },
+            {
+              "name": ".env.local",
+              "type": "file",
+              "size": 1188
+            },
+            {
+              "name": ".gitignore",
+              "type": "file",
+              "size": 1102
+            },
+            {
+              "name": "CLAUDE.md",
+              "type": "file",
+              "size": 38507
+            },
+            {
+              "name": "README.md",
+              "type": "file",
+              "size": 9018
+            },
+            {
+              "name": "examples",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "ejemplo-peluche.md",
+                  "type": "file",
+                  "size": 2867
+                }
+              ]
+            },
+            {
+              "name": "package-lock.json",
+              "type": "file",
+              "size": 50257
+            },
+            {
+              "name": "package.json",
+              "type": "file",
+              "size": 764
+            },
+            {
+              "name": "preview-server.js",
+              "type": "file",
+              "size": 2611
+            },
+            {
+              "name": "public",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "LoaderService.js",
+                  "type": "file",
+                  "size": 4666
+                },
+                {
+                  "name": "analysisRenderer.js",
+                  "type": "file",
+                  "size": 2633
+                },
+                {
+                  "name": "apiClient.js",
+                  "type": "file",
+                  "size": 8059
+                },
+                {
+                  "name": "app.js",
+                  "type": "file",
+                  "size": 23809
+                },
+                {
+                  "name": "appConfig.js",
+                  "type": "file",
+                  "size": 4943
+                },
+                {
+                  "name": "baseRenderer.js",
+                  "type": "file",
+                  "size": 2943
+                },
+                {
+                  "name": "comparativeRenderer.js",
+                  "type": "file",
+                  "size": 1786
+                },
+                {
+                  "name": "constants.js",
+                  "type": "file",
+                  "size": 7003
+                },
+                {
+                  "name": "domSelectors.js",
+                  "type": "file",
+                  "size": 5947
+                },
+                {
+                  "name": "errors.js",
+                  "type": "file",
+                  "size": 5447
+                },
+                {
+                  "name": "eventListenerManager.js",
+                  "type": "file",
+                  "size": 3872
+                },
+                {
+                  "name": "galleryRenderer.js",
+                  "type": "file",
+                  "size": 4372
+                },
+                {
+                  "name": "index.html",
+                  "type": "file",
+                  "size": 26384
+                },
+                {
+                  "name": "llmProviderSelector.js",
+                  "type": "file",
+                  "size": 4997
+                },
+                {
+                  "name": "modalHelper.js",
+                  "type": "file",
+                  "size": 2973
+                },
+                {
+                  "name": "renderService.js",
+                  "type": "file",
+                  "size": 2413
+                },
+                {
+                  "name": "scriptRenderer.js",
+                  "type": "file",
+                  "size": 1861
+                },
+                {
+                  "name": "seoRenderer.js",
+                  "type": "file",
+                  "size": 1343
+                },
+                {
+                  "name": "styles.css",
+                  "type": "file",
+                  "size": 22095
+                },
+                {
+                  "name": "uiStateManager.js",
+                  "type": "file",
+                  "size": 1464
+                }
+              ]
+            },
+            {
+              "name": "run_server.ps1",
+              "type": "file",
+              "size": 9591
+            },
+            {
+              "name": "scripts",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "start-all.js",
+                  "type": "file",
+                  "size": 3048
+                }
+              ]
+            },
+            {
+              "name": "server.log",
+              "type": "file",
+              "size": 15300
+            },
+            {
+              "name": "server.py",
+              "type": "file",
+              "size": 8798
+            },
+            {
+              "name": "src",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "config.js",
+                  "type": "file",
+                  "size": 2753
+                },
+                {
+                  "name": "errors",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "middleware",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "modules",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "server.js",
+                  "type": "file",
+                  "size": 4290
+                },
+                {
+                  "name": "storage",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "uploads",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "video-store.json",
+                  "type": "file",
+                  "size": 2
+                },
+                {
+                  "name": "videoGenerator.js",
+                  "type": "file",
+                  "size": 6214
+                },
+                {
+                  "name": "videoRoutes.js",
+                  "type": "file",
+                  "size": 4922
+                }
+              ]
+            },
+            {
+              "name": "start-all.ps1",
+              "type": "file",
+              "size": 4025
+            },
+            {
+              "name": "test",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "test-imageNormalizer-backend.js",
+                  "type": "file",
+                  "size": 2615
+                },
+                {
+                  "name": "test-multiple-images.js",
+                  "type": "file",
+                  "size": 3575
+                },
+                {
+                  "name": "test-parser.js",
+                  "type": "file",
+                  "size": 1605
+                },
+                {
+                  "name": "test-request.js",
+                  "type": "file",
+                  "size": 2898
+                }
+              ]
+            },
+            {
+              "name": "test-video-gen.js",
+              "type": "file",
+              "size": 1878
+            },
+            {
+              "name": "test-video-simple.md",
+              "type": "file",
+              "size": 869
+            },
+            {
+              "name": "tsconfig.json",
+              "type": "file",
+              "size": 708
+            }
+          ]
+        },
+        {
+          "name": "arrancar.bat",
+          "type": "file",
+          "size": 2298
+        },
+        {
+          "name": "cleanup-ports.ps1",
+          "type": "file",
+          "size": 2270
+        },
+        {
+          "name": "debug.bat",
+          "type": "file",
+          "size": 1856
+        },
+        {
+          "name": "debug.ps1",
+          "type": "file",
+          "size": 8255
+        },
+        {
+          "name": "dev-debug.ps1",
+          "type": "file",
+          "size": 5528
+        },
+        {
+          "name": "firecrawl-amz-prod-extractor",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": ".env",
+              "type": "file",
+              "size": 109
+            },
+            {
+              "name": ".env.example",
+              "type": "file",
+              "size": 116
+            },
+            {
+              "name": ".gitattributes",
+              "type": "file",
+              "size": 19
+            },
+            {
+              "name": ".gitignore",
+              "type": "file",
+              "size": 19
+            },
+            {
+              "name": "CLAUDE.md",
+              "type": "file",
+              "size": 6932
+            },
+            {
+              "name": "README.md",
+              "type": "file",
+              "size": 1955
+            },
+            {
+              "name": "REFACTORING.md",
+              "type": "file",
+              "size": 7343
+            },
+            {
+              "name": "REFACTORING_SUMMARY.txt",
+              "type": "file",
+              "size": 8086
+            },
+            {
+              "name": "package-lock.json",
+              "type": "file",
+              "size": 37959
+            },
+            {
+              "name": "package.json",
+              "type": "file",
+              "size": 455
+            },
+            {
+              "name": "src",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "config.js",
+                  "type": "file",
+                  "size": 1104
+                },
+                {
+                  "name": "extractor.js",
+                  "type": "file",
+                  "size": 2678
+                },
+                {
+                  "name": "modules",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "routes",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "schema.js",
+                  "type": "file",
+                  "size": 2957
+                },
+                {
+                  "name": "server.js",
+                  "type": "file",
+                  "size": 1668
+                }
+              ]
+            },
+            {
+              "name": "test",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "test-imageUrlNormalizer.js",
+                  "type": "file",
+                  "size": 6287
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "llm-provider-service",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": ".env.example",
+              "type": "file",
+              "size": 1126
+            },
+            {
+              "name": "CLAUDE.md",
+              "type": "file",
+              "size": 6610
+            },
+            {
+              "name": "README.md",
+              "type": "file",
+              "size": 4997
+            },
+            {
+              "name": "package-lock.json",
+              "type": "file",
+              "size": 50024
+            },
+            {
+              "name": "package.json",
+              "type": "file",
+              "size": 680
+            },
+            {
+              "name": "src",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "config.js",
+                  "type": "file",
+                  "size": 2369
+                },
+                {
+                  "name": "providers",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "routes",
+                  "type": "dir",
+                  "size": null
+                },
+                {
+                  "name": "server.js",
+                  "type": "file",
+                  "size": 2999
+                },
+                {
+                  "name": "strategies",
+                  "type": "dir",
+                  "size": null
+                }
+              ]
+            },
+            {
+              "name": "test",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "test-endpoints.sh",
+                  "type": "file",
+                  "size": 2733
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "files": {
+        "readme": true,
+        "claude": true,
         "packageJson": false,
         "setup": false,
         "env": false

@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "workspace-explorer",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".workspace_app/server.js"],
+      "port": 8080,
+      "autoPort": false,
+      "cwd": "C:\\WORKSPACE"
+    }
+  ]
+}

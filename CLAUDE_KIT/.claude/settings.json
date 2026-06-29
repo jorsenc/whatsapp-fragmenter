@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "claudekit": {
+    "enabled": true,
+    "version": "0.9.5"
+  }
+}
