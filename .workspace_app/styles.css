@@ -620,3 +620,239 @@
         .tree-children.open {
             display: block;
         }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 12px;
+            }
+
+            header {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--primary);
+            }
+
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .header-columns {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .header-left {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .search-bar {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            #typeFilter {
+                width: 100%;
+                font-size: 0.8rem;
+            }
+
+            .header-info {
+                flex-direction: row;
+                gap: 0.5rem;
+                font-size: 0.75rem;
+                width: 100%;
+            }
+
+            .stat {
+                gap: 0.2rem;
+                flex: 1;
+            }
+
+            .stat-value {
+                font-size: 0.9rem;
+            }
+
+            .header-buttons {
+                width: 100%;
+                flex-direction: row;
+                gap: 0.3rem;
+            }
+
+            .header-buttons button {
+                width: 100%;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+                flex: 1;
+            }
+
+            .container {
+                padding: 0.75rem;
+                flex-direction: column;
+            }
+
+            .panel {
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .panel h2 {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .projects-list {
+                max-height: 50vh;
+                padding-right: 0.3rem;
+            }
+
+            .project-item {
+                padding: 0.8rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .project-name {
+                font-size: 0.9rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .project-type,
+            .project-intelligent {
+                font-size: 0.75rem;
+                padding: 0.15rem 0.4rem;
+            }
+
+            .project-desc {
+                font-size: 0.75rem;
+                margin-top: 0.2rem;
+            }
+
+            .sidebar-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                top: 5.5rem;
+                right: 0.5rem;
+            }
+
+            .panel.sidebar {
+                width: 100%;
+                max-width: 100vw;
+                padding: 1.5rem 1rem;
+                height: 100vh;
+            }
+
+            .sidebar-close {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+
+            .detail-label {
+                font-size: 0.75rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .detail-value {
+                font-size: 0.85rem;
+                word-break: break-word;
+            }
+
+            .detail-section {
+                margin-bottom: 1rem;
+            }
+
+            .file-tree {
+                font-size: 0.8rem;
+            }
+
+            .tree-item {
+                padding: 0.4rem 0;
+                gap: 0.2rem;
+            }
+
+            .tree-toggle {
+                width: 14px;
+            }
+
+            .tree-size {
+                font-size: 0.7rem;
+            }
+
+            .file-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .file-buttons {
+                gap: 0.5rem;
+            }
+
+            input[type="text"],
+            select {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.85rem;
+                border-radius: 4px;
+            }
+
+            button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            #fileModal {
+                width: 95vw;
+                max-height: 80vh;
+                left: 2.5vw;
+                top: 10vh;
+                padding: 1rem;
+            }
+
+            #modalTitle {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
+
+            #modalContent {
+                font-size: 0.8rem;
+                max-height: 60vh;
+                padding: 0.8rem;
+                line-height: 1.4;
+            }
+
+            .modal-close {
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.1rem;
+            }
+
+            .header-buttons button {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.4rem;
+            }
+
+            #typeFilter {
+                font-size: 0.75rem;
+            }
+
+            .project-item {
+                padding: 0.6rem;
+            }
+
+            .sidebar-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+        }
