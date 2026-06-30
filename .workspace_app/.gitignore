@@ -1,0 +1,30 @@
+# Ignore parent directory projects
+../
+
+# Ignore node modules and dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore generated files
+public/
+dist/
+build/
