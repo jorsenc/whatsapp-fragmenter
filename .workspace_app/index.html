@@ -50,7 +50,11 @@
         </div>
     </header>
 
-    <button class="sidebar-toggle" id="sidebarToggle" title="Abrir detalles">[+]</button>
+    <button class="sidebar-toggle" id="sidebarToggle" title="Abrir detalles">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
 
     <div class="container">
         <div class="panel projects-panel">
@@ -64,7 +68,12 @@
         </div>
 
         <div class="panel sidebar" id="detailsSidebar">
-            <button class="sidebar-close" onclick="closeSidebar()" title="Cerrar">[X]</button>
+            <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
+            <button class="sidebar-close" onclick="closeSidebar()" title="Cerrar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
             <h2>Detalles</h2>
             <div class="details" id="detailsPanel">
                 <div class="no-project">
@@ -76,7 +85,11 @@
 
     <div id="fileModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">[X]</button>
+            <button class="modal-close" onclick="closeModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
             <div class="modal-header" id="modalTitle"></div>
             <div class="file-content" id="modalContent"></div>
             <div class="export-info">
@@ -169,11 +182,23 @@
             const sidebar = document.getElementById('detailsSidebar');
             sidebar.classList.add('open');
             sidebar.classList.remove('hidden');
+            updateToggleIcon(true);
         }
 
         function closeSidebar() {
             const sidebar = document.getElementById('detailsSidebar');
             sidebar.classList.remove('open');
+            updateToggleIcon(false);
+        }
+
+        function updateToggleIcon(isOpen) {
+            const toggle = document.getElementById('sidebarToggle');
+            const svg = toggle.querySelector('svg');
+            if (isOpen) {
+                svg.innerHTML = '<path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+            } else {
+                svg.innerHTML = '<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+            }
         }
 
         function showProjectDetails(project) {
@@ -276,14 +301,29 @@
             return tree.map(item => {
                 const itemPath = path ? path + '/' + item.name : item.name;
                 const isFile = item.type === 'file';
-                const isPreviewable = isFile && /\.(md|json|txt|js|ts|html|css|py|java|cpp|c|go|rb|php|sh|yml|yaml|xml)$/i.test(item.name);
+                // Archivos previewables: extensiones comunes + configuración + imágenes
+                const isPreviewable = isFile && (
+                    /\.(md|json|txt|js|ts|html|css|py|java|cpp|c|go|rb|php|sh|yml|yaml|xml|csv|log|env|editorconfig|npmrc|gitattributes|example|png|jpg|jpeg|gif|svg|webp|ico|bmp)$/i.test(item.name) ||
+                    /^\.(gitignore|env|editorconfig|npmrc|gitattributes)/.test(item.name)
+                );
+
+                const hasChildren = item.children && item.children.length > 0;
+                let treeNameHtml = '';
+
+                if (isPreviewable) {
+                    treeNameHtml = `<span class="tree-name" onclick="previewTreeFile('${projectName}', '${itemPath}')">${item.name}</span>`;
+                } else if (!isFile && hasChildren) {
+                    treeNameHtml = `<span class="tree-name" onclick="handleTreeClick(event)">${item.name}</span>`;
+                } else {
+                    treeNameHtml = `<span class="tree-name">${item.name}</span>`;
+                }
 
                 return `
                     <div class="tree-item ${item.type}">
-                        ${item.children && item.children.length > 0 ? `<span class="tree-toggle" onclick="handleTreeClick(event)">&gt;</span>` : '<span class="tree-toggle"></span>'}
-                        ${isPreviewable ? `<span class="tree-name" onclick="previewTreeFile('${projectName}', '${itemPath}')">${item.name}</span>` : `<span class="tree-name">${item.name}</span>`}
+                        ${hasChildren ? `<span class="tree-toggle" onclick="handleTreeClick(event)">&gt;</span>` : '<span class="tree-toggle"></span>'}
+                        ${treeNameHtml}
                         ${item.size ? ` <span class="tree-size">(${formatBytes(item.size)})</span>` : ''}
-                        ${item.children && item.children.length > 0 ? `
+                        ${hasChildren ? `
                             <div class="tree-children">
                                 ${renderFileTree(item.children, depth + 1, projectName, itemPath)}
                             </div>
@@ -308,32 +348,104 @@
 
         function previewTreeFile(projectName, filePath) {
             const fullPath = `/workspace-files/${projectName}/${filePath}`;
+            const fileName = filePath.toLowerCase();
+            const modalContent = document.getElementById('modalContent');
 
-            fetch(fullPath)
-                .then(res => {
-                    if (!res.ok) throw new Error('No encontrado');
-                    return res.text();
-                })
-                .then(content => {
-                    if (content.length > 100000) {
-                        content = content.substring(0, 100000) + '\n\n... (archivo muy grande, contenido truncado)';
-                    }
-                    document.getElementById('modalTitle').textContent = `${projectName} / ${filePath}`;
+            // Detectar si es una imagen
+            const isImage = /\.(png|jpg|jpeg|gif|svg|webp|ico|bmp)$/i.test(fileName);
 
-                    // Renderizar Markdown si es un archivo .md
-                    if (filePath.toLowerCase().endsWith('.md')) {
-                        const htmlContent = marked.parse(content);
-                        document.getElementById('modalContent').innerHTML = htmlContent;
-                    } else {
-                        // Para otros archivos, mostrar como texto plano en <pre>
-                        document.getElementById('modalContent').innerHTML = `<pre>${escapeHtml(content)}</pre>`;
-                    }
+            document.getElementById('modalTitle').textContent = `${projectName} / ${filePath}`;
 
-                    document.getElementById('fileModal').classList.add('active');
-                })
-                .catch(err => {
-                    alert('No se pudo cargar: ' + filePath + '\n\n' + err.message);
-                });
+            if (isImage) {
+                // Para imágenes desde workspace, solicitar copia a public
+                fetch(`/copy-to-public/${projectName}/${filePath}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.publicPath) {
+                            modalContent.innerHTML = `<img src="${data.publicPath}" class="image-preview" alt="${filePath}">`;
+                        } else {
+                            modalContent.innerHTML = `<p>No se pudo cargar la imagen</p>`;
+                        }
+                    })
+                    .catch(e => modalContent.innerHTML = `<p>Error: ${e.message}</p>`)
+                    .finally(() => document.getElementById('fileModal').classList.add('active'));
+            } else {
+                // Para archivos de texto
+                fetch(fullPath)
+                    .then(res => {
+                        if (!res.ok) throw new Error('No encontrado');
+                        return res.text();
+                    })
+                    .then(content => {
+                        if (content.length > 100000) {
+                            content = content.substring(0, 100000) + '\n\n... (archivo muy grande, contenido truncado)';
+                        }
+
+                        // Detectar si es un archivo de chat de WhatsApp
+                        const isChatFile = fileName.includes('chat_');
+                        const hasWhatsAppPatterns = content.match(/\[\d{1,2}\/\d{1,2}\/\d{2,4},\s*\d{1,2}:\d{2}/) ||
+                                                   content.match(/imagen omitida|Video omitido|Audio omitido/i);
+
+                        // Si es un chat, SIEMPRE mostrar como preformateado
+                        if (isChatFile || hasWhatsAppPatterns) {
+                            modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                        } else if (fileName.endsWith('.md')) {
+                            // Para markdown regular, usar marked si está disponible
+                            if (typeof marked !== 'undefined') {
+                                modalContent.innerHTML = marked.parse(content);
+                            } else {
+                                modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                            }
+                        } else if (fileName.endsWith('.json')) {
+                            // Para JSON, formatear con indentación
+                            try {
+                                const jsonObj = JSON.parse(content);
+                                const formatted = JSON.stringify(jsonObj, null, 2);
+                                modalContent.innerHTML = `<pre class="json-content">${escapeHtml(formatted)}</pre>`;
+                            } catch (e) {
+                                modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                            }
+                        } else if (fileName.endsWith('.csv')) {
+                            // Para CSV, convertir a tabla
+                            const lines = content.split('\n').filter(line => line.trim());
+                            const rows = lines.map(line =>
+                                line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''))
+                            );
+                            let html = '<table class="csv-table"><tbody>';
+                            rows.forEach((row, i) => {
+                                html += `<tr>${row.map((cell, j) =>
+                                    `<td>${escapeHtml(cell)}</td>`
+                                ).join('')}</tr>`;
+                            });
+                            html += '</tbody></table>';
+                            modalContent.innerHTML = html;
+                        } else if (fileName.match(/\.(gitignore|env|editorconfig|npmrc|gitattributes)$/)) {
+                            // Para archivos de configuración, destacar comentarios
+                            const lines = content.split('\n');
+                            const formatted = lines.map(line => {
+                                if (line.trim().startsWith('#')) {
+                                    return `<span class="config-comment">${escapeHtml(line)}</span>`;
+                                }
+                                return escapeHtml(line);
+                            }).join('\n');
+                            modalContent.innerHTML = `<pre class="config-content">${formatted}</pre>`;
+                        } else if (fileName.match(/\.(xml|yml|yaml)$/)) {
+                            // Para XML/YAML, mostrar preformateado con indentación
+                            modalContent.innerHTML = `<pre class="code-content">${escapeHtml(content)}</pre>`;
+                        } else if (fileName.match(/\.(js|ts|tsx|jsx|py|java|cpp|c|go|rb|php|sh|bash|html|css)$/)) {
+                            // Para código, mostrar con highlight si es posible
+                            modalContent.innerHTML = `<pre class="code-content"><code>${escapeHtml(content)}</code></pre>`;
+                        } else {
+                            // Para otros archivos, mostrar como preformateado
+                            modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                        }
+
+                        document.getElementById('fileModal').classList.add('active');
+                    })
+                    .catch(err => {
+                        alert('No se pudo cargar: ' + filePath + '\n\n' + err.message);
+                    });
+            }
         }
 
         function escapeHtml(text) {
@@ -374,18 +486,55 @@
 
         async function loadFileContent(projectName, fileName) {
             const fileUrl = `/workspace-files/${projectName}/${fileName}`;
+            const isImage = /\.(png|jpg|jpeg|gif|svg|webp|ico|bmp)$/i.test(fileName.toLowerCase());
+
+            document.getElementById('modalTitle').textContent = `${projectName} / ${fileName}`;
+            const modalContent = document.getElementById('modalContent');
 
             try {
-                const response = await fetch(fileUrl);
-                if (!response.ok) throw new Error('No encontrado');
-                let content = await response.text();
+                if (isImage) {
+                    // Para imágenes desde workspace, solicitar copia a public
+                    fetch(`/copy-to-public/${projectName}/${fileName}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.publicPath) {
+                                modalContent.innerHTML = `<img src="${data.publicPath}" class="image-preview" alt="${fileName}">`;
+                            } else {
+                                modalContent.innerHTML = `<p>Error: No se pudo cargar la imagen</p>`;
+                            }
+                        })
+                        .catch(e => modalContent.innerHTML = `<p>Error: ${e.message}</p>`);
+                } else {
+                    // Para archivos de texto
+                    const response = await fetch(fileUrl);
+                    if (!response.ok) throw new Error('No encontrado');
+                    let content = await response.text();
 
-                if (content.length > 50000) {
-                    content = content.substring(0, 50000) + '\n\n... (contenido truncado, archivo muy grande)';
+                    if (content.length > 50000) {
+                        content = content.substring(0, 50000) + '\n\n... (contenido truncado, archivo muy grande)';
+                    }
+
+                    // Detectar si es un archivo de chat de WhatsApp
+                    const isChatFile = fileName.toLowerCase().includes('chat_');
+                    const hasWhatsAppPatterns = content.match(/\[\d{1,2}\/\d{1,2}\/\d{2,4},\s*\d{1,2}:\d{2}/) ||
+                                               content.match(/imagen omitida|Video omitido|Audio omitido/i);
+
+                    // Si es un chat, SIEMPRE mostrar como preformateado
+                    if (isChatFile || hasWhatsAppPatterns) {
+                        modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                    } else if (fileName.toLowerCase().endsWith('.md')) {
+                        // Para markdown regular, usar marked si está disponible
+                        if (typeof marked !== 'undefined') {
+                            modalContent.innerHTML = marked.parse(content);
+                        } else {
+                            modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                        }
+                    } else {
+                        // Para otros archivos, mostrar como preformateado
+                        modalContent.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                    }
                 }
 
-                document.getElementById('modalTitle').textContent = `${projectName} / ${fileName}`;
-                document.getElementById('modalContent').textContent = content;
                 document.getElementById('fileModal').classList.add('active');
             } catch (error) {
                 alert('No se pudo cargar ' + fileName + ': ' + error.message);
@@ -496,6 +645,48 @@
                 }, 2000);
             }
         }
+
+        // Sidebar resizable functionality
+        (function() {
+            const sidebar = document.getElementById('detailsSidebar');
+            const resizeHandle = document.getElementById('sidebarResizeHandle');
+            let isResizing = false;
+            let startX = 0;
+            let startWidth = 0;
+
+            if (!resizeHandle) return;
+
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = sidebar.offsetWidth;
+                resizeHandle.classList.add('dragging');
+                document.body.style.userSelect = 'none';
+                document.body.style.cursor = 'col-resize';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                const diff = startX - e.clientX;
+                const newWidth = startWidth + diff;
+                const minWidth = 300;
+                const maxWidth = Math.min(window.innerWidth * 0.8, 900);
+
+                if (newWidth > minWidth && newWidth < maxWidth) {
+                    sidebar.style.width = newWidth + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizeHandle.classList.remove('dragging');
+                    document.body.style.userSelect = '';
+                    document.body.style.cursor = '';
+                }
+            });
+        })();
 
         loadWorkspaceData();
     </script>

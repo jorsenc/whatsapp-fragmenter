@@ -1,21 +1,19 @@
 {
-  "scannedAt": "2026-06-29T05:57:06.686Z",
+  "scannedAt": "2026-06-30T09:03:24.980Z",
   "workspace": "C:\\WORKSPACE",
-  "projectCount": 20,
+  "projectCount": 23,
   "projects": [
     {
-      "name": "_PRIMA",
-      "path": "./_PRIMA",
-      "type": "Documentation",
-      "intelligentType": [
-        "Documentation"
-      ],
+      "name": "_AITOYSWORLD.COM",
+      "path": "./_AITOYSWORLD.COM",
+      "type": "Mixed Project",
+      "intelligentType": [],
       "description": "No description available",
       "techStack": [
         "Static/Mixed"
       ],
-      "size": "41.3 MB",
-      "lastModified": "2026-06-28",
+      "size": "0 B",
+      "lastModified": "2026-06-29",
       "stats": {
         "hasGit": false,
         "hasTests": false,
@@ -24,141 +22,180 @@
         "hasClaude": false,
         "testFiles": []
       },
+      "fileTree": [],
+      "files": {
+        "readme": false,
+        "claude": false,
+        "packageJson": false,
+        "setup": false,
+        "env": false
+      }
+    },
+    {
+      "name": "_PRIMA",
+      "path": "./_PRIMA",
+      "type": "Mixed Project",
+      "intelligentType": [
+        "Testing Tool"
+      ],
+      "description": "No description available",
+      "techStack": [
+        "Static/Mixed"
+      ],
+      "size": "41.3 MB",
+      "lastModified": "2026-06-29",
+      "stats": {
+        "hasGit": false,
+        "hasTests": true,
+        "hasEnv": false,
+        "hasReadme": false,
+        "hasClaude": false,
+        "testFiles": [
+          ".specify"
+        ]
+      },
       "fileTree": [
         {
-          "name": "Cronología_del_colapso_de_relación.png",
-          "type": "file",
-          "size": 5177930
-        },
-        {
-          "name": "Impacto de la Violencia Intrafamiliar en Menores Testigos.md",
-          "type": "file",
-          "size": 1787
-        },
-        {
-          "name": "Los_brutales_mensajes_de_Ester_y_Toni.mp3",
-          "type": "file",
-          "size": 1561728
-        },
-        {
-          "name": "Un_embarazo_vivido_como_un_sabotaje.mp3",
-          "type": "file",
-          "size": 22736256
-        },
-        {
-          "name": "chat_ESTHER.md",
-          "type": "file",
-          "size": 4629981
-        },
-        {
-          "name": "chat_ESTHER.txt",
-          "type": "file",
-          "size": 4621766
-        },
-        {
-          "name": "chat_ESTHER_fragmentos",
+          "name": "ESTHER",
           "type": "dir",
           "size": null,
           "children": [
             {
-              "name": "INDICE_FRAGMENTOS.md",
+              "name": "Cronología_del_colapso_de_relación.png",
               "type": "file",
-              "size": 1606
+              "size": 5177930
             },
             {
-              "name": "chat_ESTHER_Abril_2022.md",
+              "name": "Impacto de la Violencia Intrafamiliar en Menores Testigos.md",
               "type": "file",
-              "size": 149785
+              "size": 1787
             },
             {
-              "name": "chat_ESTHER_Abril_2025.md",
+              "name": "Los_brutales_mensajes_de_Ester_y_Toni.mp3",
               "type": "file",
-              "size": 252880
+              "size": 1561728
             },
             {
-              "name": "chat_ESTHER_Agosto_2022.md",
+              "name": "Un_embarazo_vivido_como_un_sabotaje.mp3",
               "type": "file",
-              "size": 142746
+              "size": 22736256
             },
             {
-              "name": "chat_ESTHER_Agosto_2024.md",
+              "name": "chat_ESTHER.md",
               "type": "file",
-              "size": 281021
+              "size": 4629981
             },
             {
-              "name": "chat_ESTHER_Diciembre_2022.md",
+              "name": "chat_ESTHER.txt",
               "type": "file",
-              "size": 139162
+              "size": 4621766
             },
             {
-              "name": "chat_ESTHER_Diciembre_2024.md",
-              "type": "file",
-              "size": 224231
-            },
-            {
-              "name": "chat_ESTHER_Enero_2023.md",
-              "type": "file",
-              "size": 114584
-            },
-            {
-              "name": "chat_ESTHER_Enero_2025.md",
-              "type": "file",
-              "size": 262210
-            },
-            {
-              "name": "chat_ESTHER_Febrero_2023.md",
-              "type": "file",
-              "size": 198575
-            },
-            {
-              "name": "chat_ESTHER_Febrero_2025.md",
-              "type": "file",
-              "size": 174433
-            },
-            {
-              "name": "chat_ESTHER_Julio_2022.md",
-              "type": "file",
-              "size": 191151
-            },
-            {
-              "name": "chat_ESTHER_Junio_2022.md",
-              "type": "file",
-              "size": 157399
-            },
-            {
-              "name": "chat_ESTHER_Junio_2025.md",
-              "type": "file",
-              "size": 302290
-            },
-            {
-              "name": "chat_ESTHER_Marzo_2023.md",
-              "type": "file",
-              "size": 63313
-            },
-            {
-              "name": "chat_ESTHER_Marzo_2025.md",
-              "type": "file",
-              "size": 220912
-            },
-            {
-              "name": "chat_ESTHER_Mayo_2022.md",
-              "type": "file",
-              "size": 234971
-            },
-            {
-              "name": "chat_ESTHER_Mayo_2025.md",
-              "type": "file",
-              "size": 295725
-            },
-            {
-              "name": "chat_ESTHER_Noviembre_2022.md",
-              "type": "file",
-              "size": 131012
-            },
-            {
-              "name": "chat_ESTHER_Noviembre_2024.md",
-              "type": "file",
-              "size": 285436
+              "name": "chat_ESTHER_fragmentos",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "INDICE_FRAGMENTOS.md",
+                  "type": "file",
+                  "size": 1606
+                },
+                {
+                  "name": "chat_ESTHER_Abril_2022.md",
+                  "type": "file",
+                  "size": 149785
+                },
+                {
+                  "name": "chat_ESTHER_Abril_2025.md",
+                  "type": "file",
+                  "size": 252880
+                },
+                {
+                  "name": "chat_ESTHER_Agosto_2022.md",
+                  "type": "file",
+                  "size": 142746
+                },
+                {
+                  "name": "chat_ESTHER_Agosto_2024.md",
+                  "type": "file",
+                  "size": 281021
+                },
+                {
+                  "name": "chat_ESTHER_Diciembre_2022.md",
+                  "type": "file",
+                  "size": 139162
+                },
+                {
+                  "name": "chat_ESTHER_Diciembre_2024.md",
+                  "type": "file",
+                  "size": 224231
+                },
+                {
+                  "name": "chat_ESTHER_Enero_2023.md",
+                  "type": "file",
+                  "size": 114584
+                },
+                {
+                  "name": "chat_ESTHER_Enero_2025.md",
+                  "type": "file",
+                  "size": 262210
+                },
+                {
+                  "name": "chat_ESTHER_Febrero_2023.md",
+                  "type": "file",
+                  "size": 198575
+                },
+                {
+                  "name": "chat_ESTHER_Febrero_2025.md",
+                  "type": "file",
+                  "size": 174433
+                },
+                {
+                  "name": "chat_ESTHER_Julio_2022.md",
+                  "type": "file",
+                  "size": 191151
+                },
+                {
+                  "name": "chat_ESTHER_Junio_2022.md",
+                  "type": "file",
+                  "size": 157399
+                },
+                {
+                  "name": "chat_ESTHER_Junio_2025.md",
+                  "type": "file",
+                  "size": 302290
+                },
+                {
+                  "name": "chat_ESTHER_Marzo_2023.md",
+                  "type": "file",
+                  "size": 63313
+                },
+                {
+                  "name": "chat_ESTHER_Marzo_2025.md",
+                  "type": "file",
+                  "size": 220912
+                },
+                {
+                  "name": "chat_ESTHER_Mayo_2022.md",
+                  "type": "file",
+                  "size": 234971
+                },
+                {
+                  "name": "chat_ESTHER_Mayo_2025.md",
+                  "type": "file",
+                  "size": 295725
+                },
+                {
+                  "name": "chat_ESTHER_Noviembre_2022.md",
+                  "type": "file",
+                  "size": 131012
+                },
+                {
+                  "name": "chat_ESTHER_Noviembre_2024.md",
+                  "type": "file",
+                  "size": 285436
+                }
+              ]
             }
           ]
         }
@@ -871,8 +908,8 @@
         "Axios",
         "CORS"
       ],
-      "size": "74.0 KB",
-      "lastModified": "2026-06-25",
+      "size": "107.7 KB",
+      "lastModified": "2026-06-29",
       "stats": {
         "hasGit": true,
         "hasTests": true,
@@ -885,6 +922,16 @@
         ]
       },
       "fileTree": [
+        {
+          "name": ".CLAUDE_KIT_IMPACT.md",
+          "type": "file",
+          "size": 5067
+        },
+        {
+          "name": ".EXAMPLE_WORKFLOW.md",
+          "type": "file",
+          "size": 6588
+        },
         {
           "name": ".env",
           "type": "file",
@@ -904,6 +951,11 @@
           "name": "CLAUDE.md",
           "type": "file",
           "size": 6117
+        },
+        {
+          "name": "MEMORY.md",
+          "type": "file",
+          "size": 2528
         },
         {
           "name": "README.md",
@@ -928,14 +980,14 @@
             {
               "name": "index.html",
               "type": "file",
-              "size": 8389
+              "size": 18546
             }
           ]
         },
         {
           "name": "server.js",
           "type": "file",
-          "size": 5175
+          "size": 6639
         },
         {
           "name": "start-debug.bat",
@@ -952,6 +1004,11 @@
           "type": "dir",
           "size": null,
           "children": [
+            {
+              "name": "edit-birthday.test.js",
+              "type": "file",
+              "size": 8796
+            },
             {
               "name": "integration.test.js",
               "type": "file",
@@ -977,7 +1034,7 @@
             {
               "name": "validation.js",
               "type": "file",
-              "size": 2045
+              "size": 1925
             }
           ]
         }
@@ -1041,6 +1098,93 @@
           "name": "popup.html",
           "type": "file",
           "size": 652
+        }
+      ],
+      "files": {
+        "readme": true,
+        "claude": true,
+        "packageJson": false,
+        "setup": false,
+        "env": false
+      }
+    },
+    {
+      "name": "CLAUDE_KIT",
+      "path": "./CLAUDE_KIT",
+      "type": "Documentation",
+      "intelligentType": [
+        "Documentation",
+        "Mobile App",
+        "Database",
+        "Message Queue",
+        "Search Engine",
+        "UI Component",
+        "Utility Tool"
+      ],
+      "description": "Bienvenido a la carpeta de **Claude Kit 0.9.5**. Aquí encontrarás todo lo que necesitas para dominar el desarrollo automatizado con Claude.",
+      "techStack": [
+        "Static/Mixed"
+      ],
+      "size": "82.3 KB",
+      "lastModified": "2026-06-29",
+      "stats": {
+        "hasGit": false,
+        "hasTests": false,
+        "hasEnv": false,
+        "hasReadme": true,
+        "hasClaude": true,
+        "testFiles": []
+      },
+      "fileTree": [
+        {
+          "name": "CLAUDE.md",
+          "type": "file",
+          "size": 673
+        },
+        {
+          "name": "CLAUDEKIT_CHEAT_SHEET.md",
+          "type": "file",
+          "size": 7309
+        },
+        {
+          "name": "CLAUDEKIT_GUIA_COMPLETA.md",
+          "type": "file",
+          "size": 31643
+        },
+        {
+          "name": "CLAUDEKIT_INDICE.md",
+          "type": "file",
+          "size": 8703
+        },
+        {
+          "name": "CLAUDEKIT_RECETAS_PRACTICAS.md",
+          "type": "file",
+          "size": 13074
+        },
+        {
+          "name": "Gestión de Memoria y Contexto en Claude Code.md",
+          "type": "file",
+          "size": 3546
+        },
+        {
+          "name": "Guía de Automatización y Gestión de Memoria con Claudekit.md",
+          "type": "file",
+          "size": 3048
+        },
+        {
+          "name": "Guía de Gestión y Memoria en Claude Code.md",
+          "type": "file",
+          "size": 8498
+        },
+        {
+          "name": "MEMORY.md",
+          "type": "file",
+          "size": 122
+        },
+        {
+          "name": "README.md",
+          "type": "file",
+          "size": 7704
         }
       ],
       "files": {
@@ -4371,6 +4515,230 @@
         "packageJson": false,
         "setup": false,
         "env": false
+      }
+    },
+    {
+      "name": "whatsapp-fragmenter",
+      "path": "./whatsapp-fragmenter",
+      "type": "Web App",
+      "intelligentType": [
+        "Backend API",
+        "Express Server",
+        "Testing Tool",
+        "Chat App",
+        "Analytics",
+        "UI Component",
+        "Demo/Example"
+      ],
+      "description": "Herramienta para fragmentar archivos grandes de chat de WhatsApp en trozos mensuales que pueden ser usados como fuentes individuales en NotebookLM.",
+      "techStack": [
+        "Express.js"
+      ],
+      "size": "208.3 KB",
+      "lastModified": "2026-06-29",
+      "stats": {
+        "hasGit": true,
+        "hasTests": true,
+        "hasEnv": true,
+        "hasReadme": true,
+        "hasClaude": true,
+        "testFiles": [
+          ".specify",
+          "tests"
+        ]
+      },
+      "fileTree": [
+        {
+          "name": ".env.example",
+          "type": "file",
+          "size": 385
+        },
+        {
+          "name": ".gitignore",
+          "type": "file",
+          "size": 447
+        },
+        {
+          "name": "CLAUDE.md",
+          "type": "file",
+          "size": 2358
+        },
+        {
+          "name": "DOCUMENTATION.md",
+          "type": "file",
+          "size": 13575
+        },
+        {
+          "name": "README.md",
+          "type": "file",
+          "size": 6648
+        },
+        {
+          "name": "START-DEBUG.BAT",
+          "type": "file",
+          "size": 4353
+        },
+        {
+          "name": "START.BAT",
+          "type": "file",
+          "size": 4786
+        },
+        {
+          "name": "examples",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": ".gitkeep",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "output",
+          "type": "dir",
+          "size": null,
+          "children": []
+        },
+        {
+          "name": "package-lock.json",
+          "type": "file",
+          "size": 94374
+        },
+        {
+          "name": "package.json",
+          "type": "file",
+          "size": 782
+        },
+        {
+          "name": "public",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": "app.js",
+              "type": "file",
+              "size": 10471
+            },
+            {
+              "name": "index.html",
+              "type": "file",
+              "size": 7481
+            },
+            {
+              "name": "styles.css",
+              "type": "file",
+              "size": 9558
+            }
+          ]
+        },
+        {
+          "name": "src",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": "cli",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "index.js",
+                  "type": "file",
+                  "size": 6375
+                }
+              ]
+            },
+            {
+              "name": "fragmenter",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "monthFragmenter.js",
+                  "type": "file",
+                  "size": 3358
+                }
+              ]
+            },
+            {
+              "name": "generators",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "indexGenerator.js",
+                  "type": "file",
+                  "size": 4385
+                },
+                {
+                  "name": "markdownGenerator.js",
+                  "type": "file",
+                  "size": 3031
+                }
+              ]
+            },
+            {
+              "name": "parser",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "languagePatterns.js",
+                  "type": "file",
+                  "size": 5259
+                },
+                {
+                  "name": "whatsappParser.js",
+                  "type": "file",
+                  "size": 4947
+                }
+              ]
+            },
+            {
+              "name": "web",
+              "type": "dir",
+              "size": null,
+              "children": [
+                {
+                  "name": "server.js",
+                  "type": "file",
+                  "size": 9983
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "tests",
+          "type": "dir",
+          "size": null,
+          "children": [
+            {
+              "name": "fragmenter.test.js",
+              "type": "file",
+              "size": 5949
+            },
+            {
+              "name": "integration.test.js",
+              "type": "file",
+              "size": 9328
+            },
+            {
+              "name": "parser.test.js",
+              "type": "file",
+              "size": 5432
+            }
+          ]
+        }
+      ],
+      "files": {
+        "readme": true,
+        "claude": true,
+        "packageJson": true,
+        "setup": false,
+        "env": true
       }
     }
   ]
