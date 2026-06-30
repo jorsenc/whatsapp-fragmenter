@@ -620,6 +620,7 @@
             user-select: none;
             font-size: 0.85rem;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 0.4rem;
             transition: all 0.12s ease;
@@ -674,6 +675,7 @@
 
         .tree-item.dir .tree-name {
             color: #c586c0;
+            cursor: pointer;
         }
 
         .tree-item.dir .tree-name::before {

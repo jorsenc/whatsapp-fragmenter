@@ -336,11 +336,11 @@
         function handleTreeClick(event) {
             event.stopPropagation();
 
-            const toggle = event.target;
-            const treeItem = toggle.closest('.tree-item');
+            const treeItem = event.target.closest('.tree-item');
+            const toggle = treeItem.querySelector('.tree-toggle');
             const children = treeItem.querySelector('.tree-children');
 
-            if (children) {
+            if (children && toggle) {
                 children.classList.toggle('open');
                 toggle.textContent = children.classList.contains('open') ? 'V' : '>';
             }
